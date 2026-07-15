@@ -1,7 +1,16 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import { createClient } from "@supabase/supabase-js";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+
+const supabase =
+  process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SECRET_KEY
+    ? createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL,
+        process.env.SUPABASE_SECRET_KEY
+      )
+    : null;
 
 function escapeHtml(s: string) {
   return s
@@ -69,6 +78,16 @@ export async function POST(req: Request) {
       )
       .join("");
 
+    // Save to database first — the permanent record, independent of email delivery.
+    let saved = false;
+    if (supabase) {
+      const { error: dbError } = await supabase
+        .from("submissions")
+        .insert({ form_type: formType, data: Object.fromEntries(entries) });
+      if (dbError) console.error("Supabase insert error:", dbError);
+      else saved = true;
+    }
+
     const customerEmail =
       typeof data.email === "string" && data.email.includes("@") ? data.email : undefined;
 
@@ -85,12 +104,14 @@ export async function POST(req: Request) {
         </div>`,
     });
 
-    if (error) {
-      console.error("Resend error:", error);
+    if (error) console.error("Resend error:", error);
+
+    // Success if the submission reached at least one channel.
+    if (error && !saved) {
       return NextResponse.json({ error: "Failed to send" }, { status: 502 });
     }
 
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true, saved, emailed: !error });
   } catch {
     return NextResponse.json({ error: "Failed to send" }, { status: 500 });
   }
