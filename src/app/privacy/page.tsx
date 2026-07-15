@@ -41,7 +41,7 @@ const sections = [
   },
   {
     heading: "Contact Us",
-    body: "For any privacy questions or requests, contact us at info@kuwaittaxiservice.com or call +965 1800 8080.",
+    body: "For any privacy questions or requests, contact us at info@kuwaittaxiservice.com or call +965 5520 5485.",
   },
 ];
 

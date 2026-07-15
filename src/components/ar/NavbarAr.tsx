@@ -36,9 +36,9 @@ export default function NavbarAr() {
               <Mail className="h-3.5 w-3.5 text-brand-red" />
               info@kuwaittaxiservice.com
             </a>
-            <a href="tel:+96518008080" className="flex items-center gap-1.5 hover:text-white">
+            <a href="tel:+96555205485" className="flex items-center gap-1.5 hover:text-white">
               <Phone className="h-3.5 w-3.5 text-brand-red" />
-              <span dir="ltr">1800 8080</span>
+              <span dir="ltr">5520 5485</span>
             </a>
           </div>
           <div className="flex items-center gap-2">
@@ -79,7 +79,7 @@ export default function NavbarAr() {
               English
             </Link>
             <a
-              href="https://wa.me/96518008080?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%AD%D8%AC%D8%B2%20%D8%AA%D8%A7%D9%83%D8%B3%D9%8A"
+              href="https://wa.me/96555205485?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%AD%D8%AC%D8%B2%20%D8%AA%D8%A7%D9%83%D8%B3%D9%8A"
               className="hidden h-10 items-center gap-2 rounded-full bg-brand-green px-5 text-sm font-semibold text-white transition-colors hover:bg-brand-green-dark sm:flex"
             >
               <MessageCircle className="h-4 w-4" />
@@ -111,11 +111,11 @@ export default function NavbarAr() {
                 </Link>
               ))}
               <a
-                href="tel:+96518008080"
+                href="tel:+96555205485"
                 className="flex items-center gap-2 py-3 text-sm font-semibold text-brand-green"
               >
                 <Phone className="h-4 w-4" />
-                اتصل: <span dir="ltr">1800 8080</span>
+                اتصل: <span dir="ltr">5520 5485</span>
               </a>
             </div>
           </div>

@@ -16,7 +16,7 @@ export default function QuoteFormAr() {
       `التاريخ: ${data.get("date")}  الوقت: ${data.get("time")}`,
       `عدد الركاب: ${data.get("pax")}`,
     ];
-    const url = `https://wa.me/96518008080?text=${encodeURIComponent(lines.join("\n"))}`;
+    const url = `https://wa.me/96555205485?text=${encodeURIComponent(lines.join("\n"))}`;
     window.open(url, "_blank", "noopener,noreferrer");
   }
 

@@ -5,14 +5,14 @@ const methods = [
   {
     icon: MessageCircle,
     label: "Message Us",
-    value: "+965 1800 8080",
-    href: "https://wa.me/96518008080",
+    value: "+965 5520 5485",
+    href: "https://wa.me/96555205485",
   },
   {
     icon: Phone,
     label: "Call Us",
-    value: "1800 8080",
-    href: "tel:+96518008080",
+    value: "5520 5485",
+    href: "tel:+96555205485",
   },
   {
     icon: Mail,

@@ -100,7 +100,7 @@ export function SaudiCtaBannerAr() {
           </div>
         </div>
         <a
-          href="https://wa.me/96518008080?text=%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%AD%D8%AC%D8%B2%20%D8%B1%D8%AD%D9%84%D8%A9%20%D9%85%D9%86%20%D8%A7%D9%84%D9%83%D9%88%D9%8A%D8%AA%20%D8%A5%D9%84%D9%89%20%D8%A7%D9%84%D8%B3%D8%B9%D9%88%D8%AF%D9%8A%D8%A9"
+          href="https://wa.me/96555205485?text=%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%AD%D8%AC%D8%B2%20%D8%B1%D8%AD%D9%84%D8%A9%20%D9%85%D9%86%20%D8%A7%D9%84%D9%83%D9%88%D9%8A%D8%AA%20%D8%A5%D9%84%D9%89%20%D8%A7%D9%84%D8%B3%D8%B9%D9%88%D8%AF%D9%8A%D8%A9"
           className="group flex h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-brand-green px-7 text-base font-semibold text-white transition-colors hover:bg-emerald-600"
         >
           اسأل عن الأسعار

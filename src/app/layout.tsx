@@ -48,7 +48,7 @@ const structuredData = {
   "@type": "TaxiService",
   name: "Kuwait Taxi Service",
   url: "https://kuwaittaxiserviceq8.com",
-  telephone: "+96518008080",
+  telephone: "+96555205485",
   email: "info@kuwaittaxiservice.com",
   areaServed: [
     "Al Asimah",

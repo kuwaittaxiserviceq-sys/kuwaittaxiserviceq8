@@ -67,9 +67,9 @@ export default function FooterAr() {
 
         <div className="flex flex-col gap-4">
           <h3 className="font-semibold text-white">اتصل بنا</h3>
-          <a href="tel:+96518008080" className="flex items-start gap-3 text-sm text-zinc-400 hover:text-white">
+          <a href="tel:+96555205485" className="flex items-start gap-3 text-sm text-zinc-400 hover:text-white">
             <Phone className="mt-0.5 h-4 w-4 shrink-0 text-brand-green" />
-            <span dir="ltr">1800 8080</span>
+            <span dir="ltr">5520 5485</span>
           </a>
           <a href="mailto:info@kuwaittaxiservice.com" className="flex items-start gap-3 text-sm text-zinc-400 hover:text-white">
             <Mail className="mt-0.5 h-4 w-4 shrink-0 text-brand-green" />

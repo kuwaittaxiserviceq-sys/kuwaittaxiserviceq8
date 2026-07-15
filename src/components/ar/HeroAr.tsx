@@ -52,14 +52,14 @@ export default function HeroAr() {
           </div>
 
           <a
-            href="tel:+96518008080"
+            href="tel:+96555205485"
             className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-white"
           >
             <Phone className="h-5 w-5 text-emerald-400" />
             <div className="text-sm">
               <div className="text-zinc-400">اتصل للحجز الآن</div>
               <div className="font-semibold" dir="ltr">
-                1800 8080
+                5520 5485
               </div>
             </div>
           </a>

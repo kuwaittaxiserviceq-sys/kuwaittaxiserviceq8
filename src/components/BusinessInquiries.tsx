@@ -21,8 +21,8 @@ export default function BusinessInquiries() {
               info@kuwaittaxiservice.com
             </a>
             . Alternatively, call us on{" "}
-            <a href="tel:+96518008080" className="font-semibold text-brand-green">
-              +965 1800 8080
+            <a href="tel:+96555205485" className="font-semibold text-brand-green">
+              +965 5520 5485
             </a>
             . Looking for our rates? Visit our{" "}
             <Link href="/#rates" className="font-semibold text-brand-green underline underline-offset-2">
