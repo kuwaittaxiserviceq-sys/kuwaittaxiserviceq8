@@ -2,12 +2,14 @@
 
 import { FormEvent } from "react";
 import { Mail, MessageSquareText, Phone, Send, User } from "lucide-react";
+import { notifyAdmin } from "@/lib/notify";
 import Container from "./Container";
 
 export default function ContactForm() {
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const d = new FormData(e.currentTarget);
+    notifyAdmin("Contact Inquiry", d);
     const val = (k: string) => (d.get(k) || "").toString().trim();
     const lines = [
       "New Inquiry (Contact Form)",

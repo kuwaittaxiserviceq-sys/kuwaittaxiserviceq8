@@ -2,11 +2,13 @@
 
 import { FormEvent } from "react";
 import { CalendarDays, Clock, MapPin, Phone, User, Users } from "lucide-react";
+import { notifyAdmin } from "@/lib/notify";
 
 export default function QuoteForm() {
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
+    notifyAdmin("Quote Request", data);
     const lines = [
       "New Quote Request",
       `Name: ${data.get("name")}`,

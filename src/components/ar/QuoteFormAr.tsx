@@ -2,11 +2,13 @@
 
 import { FormEvent } from "react";
 import { CalendarDays, Clock, MapPin, Phone, User, Users } from "lucide-react";
+import { notifyAdmin } from "@/lib/notify";
 
 export default function QuoteFormAr() {
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
+    notifyAdmin("Quote Request (Arabic)", data);
     const lines = [
       "طلب عرض سعر جديد",
       `الاسم: ${data.get("name")}`,

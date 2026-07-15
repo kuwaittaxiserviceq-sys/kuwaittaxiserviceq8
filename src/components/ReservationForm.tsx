@@ -2,11 +2,13 @@
 
 import { FormEvent } from "react";
 import { Mail, MapPin, Phone, Plane } from "lucide-react";
+import { notifyAdmin } from "@/lib/notify";
 import Container from "./Container";
 
 function handleSubmit(e: FormEvent<HTMLFormElement>) {
   e.preventDefault();
   const d = new FormData(e.currentTarget);
+  notifyAdmin("Reservation", d);
   const val = (k: string) => (d.get(k) || "").toString().trim();
   const lines = [
     "New Reservation Request",
