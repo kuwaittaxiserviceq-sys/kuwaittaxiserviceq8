@@ -3,20 +3,25 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Kuwait flag palette */
+  --brand-green: #0a6b3d;
+  --brand-green-dark: #063f24;
+  --brand-green-light: #e8f4ee;
+  --brand-red: #ce1126;
+  --brand-black: #0a0a0a;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-brand-green: var(--brand-green);
+  --color-brand-green-dark: var(--brand-green-dark);
+  --color-brand-green-light: var(--brand-green-light);
+  --color-brand-red: var(--brand-red);
+  --color-brand-black: var(--brand-black);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
