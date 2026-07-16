@@ -1,9 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { createClient, type Session } from "@supabase/supabase-js";
 import {
   CarFront,
+  FileText,
   KeyRound,
   LogOut,
   MessageCircle,
@@ -315,6 +317,13 @@ export default function AdminDashboard() {
             <p className="text-sm text-zinc-500">{session.user.email}</p>
           </div>
           <div className="flex items-center gap-3">
+            <Link
+              href="/admin/documents"
+              className="flex h-10 items-center gap-2 rounded-full bg-brand-black px-5 text-sm font-semibold text-white transition-colors hover:bg-zinc-800"
+            >
+              <FileText className="h-4 w-4" />
+              Documents
+            </Link>
             <button
               type="button"
               onClick={loadRows}
