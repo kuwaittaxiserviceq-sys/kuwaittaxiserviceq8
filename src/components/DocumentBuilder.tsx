@@ -40,7 +40,19 @@ function todayISO(offsetDays = 0) {
   return d.toISOString().slice(0, 10);
 }
 
-const fmt = (n: number) => `KD ${n.toFixed(3)}`;
+const CURRENCIES = {
+  KWD: { label: "KD", name: "Kuwaiti Dinar (KD)", decimals: 3 },
+  SAR: { label: "SAR", name: "Saudi Riyal (SAR)", decimals: 2 },
+  BHD: { label: "BD", name: "Bahraini Dinar (BD)", decimals: 3 },
+  AED: { label: "AED", name: "UAE Dirham (AED)", decimals: 2 },
+  QAR: { label: "QR", name: "Qatari Riyal (QR)", decimals: 2 },
+  OMR: { label: "OMR", name: "Omani Rial (OMR)", decimals: 3 },
+  USD: { label: "$", name: "US Dollar (USD)", decimals: 2 },
+} as const;
+type Currency = keyof typeof CURRENCIES;
+
+const fmtCur = (n: number, c: Currency) =>
+  `${CURRENCIES[c].label} ${n.toFixed(CURRENCIES[c].decimals)}`;
 
 type Prefill = { formType: string; data: Record<string, string> };
 
@@ -99,6 +111,10 @@ export default function DocumentBuilder() {
   const [notes, setNotes] = useState("");
   const [paid, setPaid] = useState(false);
   const [payMethod, setPayMethod] = useState("Cash");
+  const [currency, setCurrency] = useState<Currency>("KWD");
+
+  const money = (n: number) => fmtCur(n, currency);
+  const cur = CURRENCIES[currency];
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -161,11 +177,11 @@ export default function DocumentBuilder() {
         .filter((it) => it.desc.trim())
         .map((it) => {
           const amount = (parseFloat(it.qty) || 0) * (parseFloat(it.price) || 0);
-          return `• ${it.desc} x${it.qty || "1"} — ${fmt(amount)}`;
+          return `• ${it.desc} x${it.qty || "1"} — ${money(amount)}`;
         }),
       "",
-      discountNum > 0 && `Discount: -${fmt(discountNum)}`,
-      `TOTAL: ${fmt(total)}`,
+      discountNum > 0 && `Discount: -${money(discountNum)}`,
+      `TOTAL: ${money(total)}`,
       docType === "receipt" && `Paid by ${payMethod} — thank you!`,
       docType === "invoice" && (paid ? "Status: PAID" : "Status: UNPAID"),
       docType === "quotation" && `Valid until: ${secondDate}`,
@@ -307,7 +323,21 @@ export default function DocumentBuilder() {
           </div>
 
           <div className="flex flex-col gap-3 rounded-2xl bg-white p-5 ring-1 ring-black/5">
-            <span className={labelClass}>Line Items (KD)</span>
+            <div className="flex items-center justify-between">
+              <span className={labelClass}>Line Items ({cur.label})</span>
+              <select
+                value={currency}
+                onChange={(e) => setCurrency(e.target.value as Currency)}
+                aria-label="Currency"
+                className="rounded-lg border border-zinc-300 px-2 py-1.5 text-xs font-semibold text-zinc-700 outline-none focus:border-brand-green"
+              >
+                {(Object.keys(CURRENCIES) as Currency[]).map((c) => (
+                  <option key={c} value={c}>
+                    {c} — {CURRENCIES[c].name}
+                  </option>
+                ))}
+              </select>
+            </div>
             {items.map((it, i) => (
               <div key={i} className="flex items-start gap-2">
                 <div className="flex flex-1 flex-col gap-2">
@@ -330,7 +360,7 @@ export default function DocumentBuilder() {
                       type="number"
                       min="0"
                       step="0.001"
-                      placeholder="Unit price (KD)"
+                      placeholder={`Unit price (${cur.label})`}
                       value={it.price}
                       onChange={(e) => updateItem(i, { price: e.target.value })}
                       className={inputClass}
@@ -359,7 +389,7 @@ export default function DocumentBuilder() {
 
             <div className="grid grid-cols-2 gap-3 border-t border-zinc-100 pt-3">
               <div className="flex flex-col gap-1">
-                <label className={labelClass}>Discount (KD)</label>
+                <label className={labelClass}>Discount ({cur.label})</label>
                 <input
                   type="number"
                   min="0"
@@ -372,7 +402,7 @@ export default function DocumentBuilder() {
               </div>
               <div className="flex flex-col justify-end text-right">
                 <span className={labelClass}>Total</span>
-                <span className="text-xl font-bold text-brand-green">{fmt(total)}</span>
+                <span className="text-xl font-bold text-brand-green">{money(total)}</span>
               </div>
             </div>
 
@@ -520,9 +550,9 @@ export default function DocumentBuilder() {
                         <tr key={i} className="border-b border-zinc-100">
                           <td className="py-3 text-zinc-800">{it.desc || "—"}</td>
                           <td className="py-3 text-center text-zinc-600">{it.qty || "1"}</td>
-                          <td className="py-3 text-right text-zinc-600">{fmt(p)}</td>
+                          <td className="py-3 text-right text-zinc-600">{money(p)}</td>
                           <td className="py-3 text-right font-semibold text-zinc-900">
-                            {fmt(q * p)}
+                            {money(q * p)}
                           </td>
                         </tr>
                       );
@@ -535,17 +565,17 @@ export default function DocumentBuilder() {
                 <div className="w-64 text-sm">
                   <div className="flex justify-between py-1.5 text-zinc-600">
                     <span>Subtotal</span>
-                    <span>{fmt(subtotal)}</span>
+                    <span>{money(subtotal)}</span>
                   </div>
                   {discountNum > 0 && (
                     <div className="flex justify-between py-1.5 text-zinc-600">
                       <span>Discount</span>
-                      <span>-{fmt(discountNum)}</span>
+                      <span>-{money(discountNum)}</span>
                     </div>
                   )}
                   <div className="mt-1 flex justify-between border-t-2 border-zinc-900 py-2 text-base font-bold text-zinc-900">
                     <span>{docType === "receipt" ? "Amount Received" : "Total"}</span>
-                    <span className="text-brand-green">{fmt(total)}</span>
+                    <span className="text-brand-green">{money(total)}</span>
                   </div>
                 </div>
               </div>
@@ -562,7 +592,10 @@ export default function DocumentBuilder() {
               <div className="mt-12 flex items-end justify-between border-t border-zinc-100 pt-6">
                 <div className="text-xs leading-5 text-zinc-500">
                   {docType === "quotation" && (
-                    <>Prices are in Kuwaiti Dinar (KD) and valid until {secondDate}.<br /></>
+                    <>Prices are in {cur.name} and valid until {secondDate}.<br /></>
+                  )}
+                  {docType !== "quotation" && (
+                    <>All amounts are in {cur.name}.<br /></>
                   )}
                   Payment accepted by Cash, KNET, or card.
                   <br />
