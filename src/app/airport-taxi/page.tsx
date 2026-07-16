@@ -12,7 +12,10 @@ import Fleet from "@/components/Fleet";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  alternates: { canonical: "/airport-taxi" },
+  alternates: {
+    canonical: "/airport-taxi",
+    languages: { en: "/airport-taxi", ar: "/ar/airport-taxi" },
+  },
   title: "Kuwait Airport Taxi | 24/7 Airport Transfer at Fixed Fares (KWI)",
   description:
     "Pre-book your Kuwait airport taxi — meet & greet inside arrivals, flight tracking, 60 minutes free waiting, and fixed fares to every area. 24/7 at Kuwait International Airport. Call 5520 5485.",

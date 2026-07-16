@@ -4,6 +4,7 @@ import Container from "../Container";
 
 const quickLinks = [
   { href: "/ar", label: "الرئيسية" },
+  { href: "/ar/airport-taxi", label: "تاكسي المطار" },
   { href: "/ar#services", label: "خدماتنا" },
   { href: "/ar#rates", label: "أسعارنا" },
   { href: "/ar#areas", label: "المناطق" },

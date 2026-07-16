@@ -4,6 +4,7 @@ import SaudiHero from "@/components/SaudiHero";
 import RideInclusions from "@/components/RideInclusions";
 import SaudiRoutesTable from "@/components/SaudiRoutesTable";
 import BorderProcess from "@/components/BorderProcess";
+import GccBanner from "@/components/GccBanner";
 import Faq from "@/components/Faq";
 import Fleet from "@/components/Fleet";
 import Footer from "@/components/Footer";
@@ -61,6 +62,7 @@ export default function SaudiTransfersPage() {
         <SaudiHero />
         <RideInclusions />
         <SaudiRoutesTable />
+        <GccBanner />
         <BorderProcess />
         <Faq
           eyebrow="Border Crossing FAQs"
