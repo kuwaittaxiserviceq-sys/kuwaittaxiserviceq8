@@ -131,6 +131,14 @@ export default function AdminDashboard() {
     }
   }
 
+  function makeDocument(row: Row) {
+    sessionStorage.setItem(
+      "doc-prefill",
+      JSON.stringify({ formType: row.form_type, data: row.data })
+    );
+    window.location.href = "/admin/documents";
+  }
+
   async function deleteRow(id: string) {
     if (!window.confirm("Delete this booking permanently?")) return;
     const token = await getToken();
@@ -489,14 +497,25 @@ export default function AdminDashboard() {
                       </select>
                     </td>
                     <td className="px-4 py-3">
-                      <button
-                        type="button"
-                        onClick={() => deleteRow(row.id)}
-                        aria-label="Delete booking"
-                        className="flex h-8 w-8 items-center justify-center rounded-full text-zinc-400 transition-colors hover:bg-red-50 hover:text-red-600"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
+                      <div className="flex items-center gap-1">
+                        <button
+                          type="button"
+                          onClick={() => makeDocument(row)}
+                          aria-label="Create quotation or invoice"
+                          title="Create quotation / invoice"
+                          className="flex h-8 w-8 items-center justify-center rounded-full text-zinc-400 transition-colors hover:bg-brand-green-light hover:text-brand-green"
+                        >
+                          <FileText className="h-4 w-4" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => deleteRow(row.id)}
+                          aria-label="Delete booking"
+                          className="flex h-8 w-8 items-center justify-center rounded-full text-zinc-400 transition-colors hover:bg-red-50 hover:text-red-600"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );

@@ -12,6 +12,7 @@ import {
   Printer,
   Trash2,
 } from "lucide-react";
+import { ratesData } from "./ratesData";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL as string,
@@ -40,6 +41,43 @@ function todayISO(offsetDays = 0) {
 }
 
 const fmt = (n: number) => `KD ${n.toFixed(3)}`;
+
+type Prefill = { formType: string; data: Record<string, string> };
+
+// Suggest a fare from the rate card when the booking mentions a known area.
+function suggestFare(data: Record<string, string>): string {
+  const haystack = `${data.pickup ?? ""} ${data.dropoff ?? ""}`.toLowerCase();
+  const match = ratesData.find((r) => haystack.includes(r.area.toLowerCase()));
+  if (!match) return "";
+  const vehicle = (data.vehicle ?? "").toLowerCase();
+  if (vehicle.includes("van")) return String(match.van8);
+  if (vehicle.includes("suv")) return String(match.suv);
+  return String(match.sedan);
+}
+
+function prefillFields(p: Prefill) {
+  const d = p.data;
+  const name =
+    d.name || [d.salutation, d.firstName, d.lastName].filter(Boolean).join(" ") || "";
+  const route =
+    d.pickup && d.dropoff ? `${d.pickup} → ${d.dropoff}` : d.pickup || d.dropoff || "";
+  const service = d.service || p.formType;
+  const desc = route ? `${service} — ${route}` : service;
+  const noteBits = [
+    d.date && `Trip: ${d.date}${d.time ? ` ${d.time}` : ""}`,
+    d.tripType === "round-trip" && "Round trip",
+    d.flight && `Flight: ${d.flight}`,
+    (d.passengers || d.pax) && `Passengers: ${d.passengers ?? d.pax}`,
+    d.vehicle && `Vehicle: ${d.vehicle}`,
+    d.childSeat === "yes" && "Child seat required",
+  ].filter(Boolean) as string[];
+
+  return {
+    customer: { name, phone: d.phone ?? "", address: "" },
+    items: [{ desc, qty: "1", price: suggestFare(d) }],
+    notes: noteBits.join(" · "),
+  };
+}
 
 const inputClass =
   "w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none focus:border-brand-green";
@@ -70,6 +108,25 @@ export default function DocumentBuilder() {
     const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setSession(s));
     return () => sub.subscription.unsubscribe();
   }, []);
+
+  // Consume a booking passed from the admin dashboard (one-shot).
+  useEffect(() => {
+    if (!session) return;
+    const t = setTimeout(() => {
+      try {
+        const raw = sessionStorage.getItem("doc-prefill");
+        if (!raw) return;
+        sessionStorage.removeItem("doc-prefill");
+        const filled = prefillFields(JSON.parse(raw) as Prefill);
+        setCustomer(filled.customer);
+        setItems(filled.items);
+        setNotes(filled.notes);
+      } catch {
+        /* ignore malformed prefill */
+      }
+    }, 0);
+    return () => clearTimeout(t);
+  }, [session]);
 
   function switchType(t: DocType) {
     setDocType(t);
