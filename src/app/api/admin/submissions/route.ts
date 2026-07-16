@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { Resend } from "resend";
+import { statusEmail } from "@/lib/emailTemplates";
 
 const STATUSES = ["new", "confirmed", "completed", "cancelled"] as const;
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 function adminClient() {
   return createClient(
@@ -51,9 +55,39 @@ export async function PATCH(req: Request) {
     return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
   }
 
-  const { error } = await supabase.from("submissions").update({ status }).eq("id", id);
+  const { data: updated, error } = await supabase
+    .from("submissions")
+    .update({ status })
+    .eq("id", id)
+    .select("form_type, data")
+    .single();
   if (error) return NextResponse.json({ error: "Update failed" }, { status: 500 });
-  return NextResponse.json({ ok: true });
+
+  // Notify the customer of the status change when they left an email.
+  let customerEmailed = false;
+  const customerEmail =
+    typeof updated?.data?.email === "string" && updated.data.email.includes("@")
+      ? updated.data.email
+      : null;
+  if (customerEmail) {
+    const entries = Object.entries(updated.data).filter(
+      (e): e is [string, string] => typeof e[1] === "string" && e[1].trim() !== ""
+    );
+    const mail = statusEmail(status, updated.form_type, entries);
+    if (mail) {
+      const { error: mailError } = await resend.emails.send({
+        from: `Kuwait Taxi Service <bookings@${process.env.RESEND_EMAIL_DOMAIN}>`,
+        to: customerEmail,
+        replyTo: process.env.ADMIN_GMAIL,
+        subject: mail.subject,
+        html: mail.html,
+      });
+      if (mailError) console.error("Status email error:", mailError);
+      else customerEmailed = true;
+    }
+  }
+
+  return NextResponse.json({ ok: true, customerEmailed });
 }
 
 export async function DELETE(req: Request) {

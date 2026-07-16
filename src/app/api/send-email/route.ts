@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { createClient } from "@supabase/supabase-js";
+import { customerReceivedEmail, escapeHtml } from "@/lib/emailTemplates";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -11,14 +12,6 @@ const supabase =
         process.env.SUPABASE_SECRET_KEY
       )
     : null;
-
-function escapeHtml(s: string) {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
 
 const labels: Record<string, string> = {
   name: "Name",
@@ -106,12 +99,30 @@ export async function POST(req: Request) {
 
     if (error) console.error("Resend error:", error);
 
+    // Auto-reply to the customer when they provided an email.
+    let autoReplied = false;
+    if (customerEmail) {
+      const friendly = entries.map(
+        ([k, v]) => [labels[k] ?? k, v] as [string, string]
+      );
+      const reply = customerReceivedEmail(formType, friendly);
+      const { error: replyError } = await resend.emails.send({
+        from: `Kuwait Taxi Service <bookings@${process.env.RESEND_EMAIL_DOMAIN}>`,
+        to: customerEmail,
+        replyTo: process.env.ADMIN_GMAIL,
+        subject: reply.subject,
+        html: reply.html,
+      });
+      if (replyError) console.error("Auto-reply error:", replyError);
+      else autoReplied = true;
+    }
+
     // Success if the submission reached at least one channel.
     if (error && !saved) {
       return NextResponse.json({ error: "Failed to send" }, { status: 502 });
     }
 
-    return NextResponse.json({ ok: true, saved, emailed: !error });
+    return NextResponse.json({ ok: true, saved, emailed: !error, autoReplied });
   } catch {
     return NextResponse.json({ error: "Failed to send" }, { status: 500 });
   }

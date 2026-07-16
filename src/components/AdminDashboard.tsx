@@ -465,6 +465,14 @@ export default function AdminDashboard() {
                           </a>
                         </div>
                       )}
+                      {row.data.email && (
+                        <a
+                          href={`mailto:${row.data.email}`}
+                          className="mt-0.5 block text-xs text-brand-green hover:underline"
+                        >
+                          {row.data.email}
+                        </a>
+                      )}
                     </td>
                     <td className="px-4 py-3">
                       <span className="rounded-full bg-brand-green-light px-3 py-1 text-xs font-semibold whitespace-nowrap text-brand-green">
@@ -474,7 +482,7 @@ export default function AdminDashboard() {
                     <td className="px-4 py-3">
                       <dl className="grid max-w-md grid-cols-1 gap-x-6 gap-y-1">
                         {Object.entries(row.data)
-                          .filter(([k]) => !["name", "phone", "firstName", "lastName", "salutation"].includes(k))
+                          .filter(([k]) => !["name", "phone", "email", "firstName", "lastName", "salutation"].includes(k))
                           .map(([k, v]) => (
                             <div key={k} className="flex gap-1.5">
                               <dt className="font-medium whitespace-nowrap text-zinc-500">{k}:</dt>
