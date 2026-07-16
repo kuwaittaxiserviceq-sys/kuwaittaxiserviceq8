@@ -39,14 +39,16 @@ const quickLinks = [
 ];
 
 const services = [
-  "Airport Transfer Service",
   "Hourly Taxi Service",
   "Corporate Service",
   "Private City Rides",
   "Long-Distance Trips",
 ];
 
-const saudiService = { href: "/saudi-transfers", label: "Kuwait ⇄ Saudi Transfers" };
+const serviceLinks = [
+  { href: "/airport-taxi", label: "Kuwait Airport Taxi" },
+  { href: "/saudi-transfers", label: "Kuwait ⇄ Saudi Transfers" },
+];
 
 export default function Footer() {
   return (
@@ -96,17 +98,20 @@ export default function Footer() {
 
         <div className="flex flex-col gap-3">
           <h3 className="font-semibold text-white">Services</h3>
+          {serviceLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="text-sm font-medium text-emerald-400 transition-colors hover:text-emerald-300"
+            >
+              {link.label}
+            </Link>
+          ))}
           {services.map((service) => (
             <span key={service} className="text-sm text-zinc-400">
               {service}
             </span>
           ))}
-          <Link
-            href={saudiService.href}
-            className="text-sm font-medium text-emerald-400 transition-colors hover:text-emerald-300"
-          >
-            {saudiService.label}
-          </Link>
         </div>
 
         <div className="flex flex-col gap-4">

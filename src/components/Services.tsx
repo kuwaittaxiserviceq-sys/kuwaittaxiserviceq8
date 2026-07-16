@@ -15,7 +15,8 @@ const services = [
     title: "Airport Transfer Service",
     description:
       "Door-to-door transfers to and from Kuwait International Airport, with live flight tracking included.",
-    href: "#reservation",
+    href: "/airport-taxi",
+    cta: "Airport Taxi Fares",
   },
   {
     icon: ArrowLeftRight,

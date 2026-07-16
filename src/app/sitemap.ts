@@ -8,6 +8,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/ar`, changeFrequency: "weekly", priority: 1 },
     { url: `${baseUrl}/about`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${baseUrl}/areas`, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${baseUrl}/airport-taxi`, changeFrequency: "weekly", priority: 0.9 },
     { url: `${baseUrl}/saudi-transfers`, changeFrequency: "weekly", priority: 0.9 },
     { url: `${baseUrl}/rates`, changeFrequency: "weekly", priority: 0.9 },
     { url: `${baseUrl}/reservation`, changeFrequency: "monthly", priority: 0.9 },
