@@ -1,4 +1,12 @@
+"use client";
+
+import { usePathname } from "next/navigation";
+
 export default function FloatingWhatsApp() {
+  const pathname = usePathname();
+  // The customer chat bubble doesn't belong in the admin panel.
+  if (pathname.startsWith("/admin")) return null;
+
   return (
     <a
       href="https://wa.me/96555205485?text=Hi%2C%20I%20want%20to%20book%20a%20taxi"

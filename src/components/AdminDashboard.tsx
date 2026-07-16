@@ -1,19 +1,17 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import Link from "next/link";
 import { createClient, type Session } from "@supabase/supabase-js";
 import {
-  CarFront,
   FileText,
   KeyRound,
-  LogOut,
   MessageCircle,
   Phone,
   RefreshCw,
   Search,
   Trash2,
 } from "lucide-react";
+import AdminShell from "./AdminShell";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL as string,
@@ -231,7 +229,7 @@ export default function AdminDashboard() {
   // ---------- Set new password ----------
   if (session && recovery) {
     return (
-      <Shell>
+      <AdminShell center>
         <div className="mx-auto w-full max-w-sm rounded-3xl bg-white p-8 shadow-xl ring-1 ring-black/5">
           <h1 className="text-xl font-bold text-zinc-900">Set a New Password</h1>
           <p className="mt-1 text-sm text-zinc-500">For {session.user.email}</p>
@@ -255,14 +253,14 @@ export default function AdminDashboard() {
             {notice && <p className="text-sm text-brand-red">{notice}</p>}
           </form>
         </div>
-      </Shell>
+      </AdminShell>
     );
   }
 
   // ---------- Login ----------
   if (!session) {
     return (
-      <Shell>
+      <AdminShell center>
         <div className="mx-auto w-full max-w-sm rounded-3xl bg-white p-8 shadow-xl ring-1 ring-black/5">
           <div className="mb-6 flex items-center gap-3">
             <span className="flex h-11 w-11 items-center justify-center rounded-full bg-brand-green text-white">
@@ -311,13 +309,13 @@ export default function AdminDashboard() {
 
           {notice && <p className="mt-4 text-sm text-brand-red">{notice}</p>}
         </div>
-      </Shell>
+      </AdminShell>
     );
   }
 
   // ---------- Dashboard ----------
   return (
-    <Shell wide>
+    <AdminShell userEmail={session.user.email} onLogout={handleLogout}>
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
@@ -325,13 +323,6 @@ export default function AdminDashboard() {
             <p className="text-sm text-zinc-500">{session.user.email}</p>
           </div>
           <div className="flex items-center gap-3">
-            <Link
-              href="/admin/documents"
-              className="flex h-10 items-center gap-2 rounded-full bg-brand-black px-5 text-sm font-semibold text-white transition-colors hover:bg-zinc-800"
-            >
-              <FileText className="h-4 w-4" />
-              Documents
-            </Link>
             <button
               type="button"
               onClick={loadRows}
@@ -340,14 +331,6 @@ export default function AdminDashboard() {
             >
               <RefreshCw className={`h-4 w-4 ${busy ? "animate-spin" : ""}`} />
               Refresh
-            </button>
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="flex h-10 items-center gap-2 rounded-full bg-zinc-200 px-5 text-sm font-semibold text-zinc-700 transition-colors hover:bg-zinc-300"
-            >
-              <LogOut className="h-4 w-4" />
-              Logout
             </button>
           </div>
         </div>
@@ -539,24 +522,6 @@ export default function AdminDashboard() {
           </table>
         </div>
       </div>
-    </Shell>
-  );
-}
-
-function Shell({ children, wide = false }: { children: React.ReactNode; wide?: boolean }) {
-  return (
-    <div className="flex min-h-screen flex-col bg-zinc-100">
-      <header className="bg-brand-black">
-        <div className="mx-auto flex max-w-6xl items-center gap-2 px-6 py-4">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-green text-white">
-            <CarFront className="h-5 w-5" strokeWidth={2.5} />
-          </span>
-          <span className="font-bold text-white">Kuwait Taxi — Admin</span>
-        </div>
-      </header>
-      <main className={`flex flex-1 flex-col px-6 py-12 ${wide ? "" : "justify-center"}`}>
-        {children}
-      </main>
-    </div>
+    </AdminShell>
   );
 }

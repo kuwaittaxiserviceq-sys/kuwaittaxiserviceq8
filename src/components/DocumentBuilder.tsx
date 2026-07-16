@@ -12,6 +12,7 @@ import {
   Printer,
   Trash2,
 } from "lucide-react";
+import AdminShell from "./AdminShell";
 import { ratesData } from "./ratesData";
 
 const supabase = createClient(
@@ -197,40 +198,28 @@ export default function DocumentBuilder() {
 
   if (!session) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-zinc-100 px-6 text-center">
-        <FileText className="h-10 w-10 text-brand-green" />
-        <h1 className="text-xl font-bold text-zinc-900">Documents — Admin Only</h1>
-        <p className="text-sm text-zinc-500">Please sign in to the admin panel first.</p>
-        <Link
-          href="/admin"
-          className="flex h-11 items-center gap-2 rounded-full bg-brand-green px-6 text-sm font-semibold text-white hover:bg-brand-green-dark"
-        >
-          Go to Admin Login
-          <ArrowRight className="h-4 w-4" />
-        </Link>
-      </div>
+      <AdminShell center>
+        <div className="mx-auto flex w-full max-w-sm flex-col items-center gap-4 rounded-3xl bg-white p-8 text-center shadow-xl ring-1 ring-black/5">
+          <FileText className="h-10 w-10 text-brand-green" />
+          <h1 className="text-xl font-bold text-zinc-900">Documents — Admin Only</h1>
+          <p className="text-sm text-zinc-500">Please sign in to the admin panel first.</p>
+          <Link
+            href="/admin"
+            className="flex h-11 items-center gap-2 rounded-full bg-brand-green px-6 text-sm font-semibold text-white hover:bg-brand-green-dark"
+          >
+            Go to Admin Login
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </AdminShell>
     );
   }
 
   const meta = docMeta[docType];
 
   return (
-    <div className="flex min-h-screen flex-col bg-zinc-100">
-      <header className="no-print bg-brand-black">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-2">
-            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-green text-white">
-              <CarFront className="h-5 w-5" strokeWidth={2.5} />
-            </span>
-            <span className="font-bold text-white">Kuwait Taxi — Documents</span>
-          </div>
-          <Link href="/admin" className="text-sm font-semibold text-zinc-300 hover:text-white">
-            ← Back to Bookings
-          </Link>
-        </div>
-      </header>
-
-      <main className="mx-auto grid w-full max-w-7xl flex-1 gap-8 px-6 py-8 lg:grid-cols-[380px_1fr]">
+    <AdminShell userEmail={session.user.email} onLogout={() => supabase.auth.signOut()}>
+      <div className="mx-auto grid w-full max-w-7xl flex-1 gap-8 lg:grid-cols-[380px_1fr]">
         {/* ------- Form ------- */}
         <div className="no-print flex flex-col gap-5">
           <div className="flex gap-2">
@@ -609,7 +598,7 @@ export default function DocumentBuilder() {
             </div>
           </div>
         </div>
-      </main>
-    </div>
+      </div>
+    </AdminShell>
   );
 }
