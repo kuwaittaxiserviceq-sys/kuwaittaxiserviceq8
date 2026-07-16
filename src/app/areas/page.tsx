@@ -7,9 +7,9 @@ import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/areas" },
-  title: "Areas We Serve | Kuwait Taxi Service",
+  title: "Taxi Service in All Kuwait Areas | Hawalli, Salmiya, Fahaheel & More",
   description:
-    "Kuwait Taxi Service covers every governorate in Kuwait — Al Asimah, Hawalli, Farwaniya, Ahmadi, Jahra, and Mubarak Al-Kabeer — with 24/7 taxi and airport transfer service.",
+    "24/7 taxi service in every Kuwait governorate — Kuwait City, Hawalli, Salmiya, Fahaheel, Farwaniya, Jahra, Ahmadi and 60+ areas. Airport taxi and city rides at fixed fares.",
 };
 
 export default function AreasPage() {

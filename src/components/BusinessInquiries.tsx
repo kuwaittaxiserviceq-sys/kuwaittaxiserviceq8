@@ -15,10 +15,10 @@ export default function BusinessInquiries() {
             please use the form below and we&apos;ll get in touch with you
             within 24 hrs, or email us at{" "}
             <a
-              href="mailto:info@kuwaittaxiservice.com"
+              href="mailto:kuwaittaxiserviceq@gmail.com"
               className="font-semibold text-brand-green underline underline-offset-2"
             >
-              info@kuwaittaxiservice.com
+              kuwaittaxiserviceq@gmail.com
             </a>
             . Alternatively, call us on{" "}
             <a href="tel:+96555205485" className="font-semibold text-brand-green">

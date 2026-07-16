@@ -24,22 +24,22 @@ export const metadata: Metadata = {
     canonical: "/",
     languages: { en: "/", ar: "/ar" },
   },
-  title: "Kuwait Taxi Service | Reliable Rides Across Kuwait, 24/7",
+  title: "Kuwait Taxi Service | Airport Taxi & Transfers in Kuwait — 24/7 Fixed Fares",
   description:
-    "Book a safe, reliable taxi anywhere in Kuwait. Airport transfers, city rides, and long-distance trips with professional licensed drivers, available 24/7 at fixed fares.",
+    "Book a taxi in Kuwait — airport taxi to Kuwait International Airport, city rides, and Kuwait-to-Saudi transfers. Fixed fares, licensed drivers, 24/7 in all governorates. Call 5520 5485.",
   openGraph: {
     type: "website",
     siteName: "Kuwait Taxi Service",
-    title: "Kuwait Taxi Service | Reliable Rides Across Kuwait, 24/7",
+    title: "Kuwait Taxi Service | Airport Taxi & Transfers in Kuwait — 24/7",
     description:
-      "Fixed-fare taxi and airport transfers across every governorate in Kuwait — available 24/7 with licensed, professional drivers.",
+      "Airport taxi, city rides, and Kuwait-to-Saudi transfers at fixed fares — 24/7 with licensed drivers in every governorate.",
     locale: "en_KW",
   },
   twitter: {
     card: "summary",
-    title: "Kuwait Taxi Service | Reliable Rides Across Kuwait, 24/7",
+    title: "Kuwait Taxi Service | Airport Taxi & Transfers in Kuwait — 24/7",
     description:
-      "Fixed-fare taxi and airport transfers across every governorate in Kuwait — available 24/7.",
+      "Airport taxi, city rides, and Kuwait-to-Saudi transfers at fixed fares — 24/7 across Kuwait.",
   },
 };
 
@@ -49,7 +49,7 @@ const structuredData = {
   name: "Kuwait Taxi Service",
   url: "https://kuwaittaxiserviceq8.com",
   telephone: "+96555205485",
-  email: "info@kuwaittaxiservice.com",
+  email: "kuwaittaxiserviceq@gmail.com",
   areaServed: [
     "Al Asimah",
     "Hawalli",

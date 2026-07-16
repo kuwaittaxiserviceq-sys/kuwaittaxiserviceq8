@@ -10,7 +10,7 @@ import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/contact" },
-  title: "Contact Us | Kuwait Taxi Service",
+  title: "Contact Kuwait Taxi Service | Book by Phone, WhatsApp or Email — 24/7",
   description:
     "Get in touch with Kuwait Taxi Service for bookings, corporate accounts, and custom routes. Available 24/7 by phone, WhatsApp, or email.",
 };

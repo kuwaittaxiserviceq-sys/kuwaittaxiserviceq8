@@ -35,11 +35,11 @@ export default function Navbar() {
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-2 text-xs">
           <div className="flex items-center gap-5">
             <a
-              href="mailto:info@kuwaittaxiservice.com"
+              href="mailto:kuwaittaxiserviceq@gmail.com"
               className="flex items-center gap-1.5 hover:text-white"
             >
               <Mail className="h-3.5 w-3.5 text-brand-red" />
-              info@kuwaittaxiservice.com
+              kuwaittaxiserviceq@gmail.com
             </a>
             <a href="tel:+96555205485" className="flex items-center gap-1.5 hover:text-white">
               <Phone className="h-3.5 w-3.5 text-brand-red" />

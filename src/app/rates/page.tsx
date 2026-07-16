@@ -10,9 +10,9 @@ import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/rates" },
-  title: "Our Rates | Kuwait Taxi Service",
+  title: "Taxi Fares in Kuwait | Airport Taxi Prices & Flat Rates | Kuwait Taxi Service",
   description:
-    "Flat-rate taxi and airport transfer prices across every governorate in Kuwait. Search fares by city or area, sedan to 14-passenger van.",
+    "Kuwait taxi fares and airport taxi prices for every governorate — search flat rates by area, from sedans to 14-passenger vans. No surge pricing, ever.",
 };
 
 export default function RatesPage() {

@@ -9,9 +9,9 @@ import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/reservation" },
-  title: "Reservation | Kuwait Taxi Service",
+  title: "Book a Taxi in Kuwait Online | Airport Transfer Booking | Kuwait Taxi Service",
   description:
-    "Reserve your taxi or airport transfer in Kuwait online. Fixed fares, professional drivers, and instant confirmation.",
+    "Book your Kuwait taxi or airport transfer online in under a minute — fixed fare confirmed instantly, licensed drivers, flight tracking included, 24/7.",
 };
 
 export default function ReservationPage() {

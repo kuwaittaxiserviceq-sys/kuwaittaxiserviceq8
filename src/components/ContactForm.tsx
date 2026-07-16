@@ -93,8 +93,8 @@ export default function ContactForm() {
           </button>
           <p className="text-xs text-zinc-400">
             Opens WhatsApp with your message — or email us directly at{" "}
-            <a href="mailto:info@kuwaittaxiservice.com" className="font-medium text-brand-green">
-              info@kuwaittaxiservice.com
+            <a href="mailto:kuwaittaxiserviceq@gmail.com" className="font-medium text-brand-green">
+              kuwaittaxiserviceq@gmail.com
             </a>
             .
           </p>

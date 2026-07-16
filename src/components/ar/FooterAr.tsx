@@ -71,9 +71,9 @@ export default function FooterAr() {
             <Phone className="mt-0.5 h-4 w-4 shrink-0 text-brand-green" />
             <span dir="ltr">5520 5485</span>
           </a>
-          <a href="mailto:info@kuwaittaxiservice.com" className="flex items-start gap-3 text-sm text-zinc-400 hover:text-white">
+          <a href="mailto:kuwaittaxiserviceq@gmail.com" className="flex items-start gap-3 text-sm text-zinc-400 hover:text-white">
             <Mail className="mt-0.5 h-4 w-4 shrink-0 text-brand-green" />
-            info@kuwaittaxiservice.com
+            kuwaittaxiserviceq@gmail.com
           </a>
           <div className="flex items-start gap-3 text-sm text-zinc-400">
             <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-brand-green" />

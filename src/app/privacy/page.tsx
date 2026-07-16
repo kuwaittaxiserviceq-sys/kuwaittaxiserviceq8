@@ -33,7 +33,7 @@ const sections = [
   },
   {
     heading: "Your Rights",
-    body: "You may request a copy of the personal information we hold about you, ask us to correct it, or ask us to delete it (subject to legal retention requirements) by contacting us at info@kuwaittaxiservice.com.",
+    body: "You may request a copy of the personal information we hold about you, ask us to correct it, or ask us to delete it (subject to legal retention requirements) by contacting us at kuwaittaxiserviceq@gmail.com.",
   },
   {
     heading: "Changes to This Policy",
@@ -41,7 +41,7 @@ const sections = [
   },
   {
     heading: "Contact Us",
-    body: "For any privacy questions or requests, contact us at info@kuwaittaxiservice.com or call +965 5520 5485.",
+    body: "For any privacy questions or requests, contact us at kuwaittaxiserviceq@gmail.com or call +965 5520 5485.",
   },
 ];
 

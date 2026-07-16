@@ -17,8 +17,8 @@ const methods = [
   {
     icon: Mail,
     label: "Email Us",
-    value: "info@kuwaittaxiservice.com",
-    href: "mailto:info@kuwaittaxiservice.com",
+    value: "kuwaittaxiserviceq@gmail.com",
+    href: "mailto:kuwaittaxiserviceq@gmail.com",
   },
 ];
 

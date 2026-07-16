@@ -13,7 +13,7 @@ import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/about" },
-  title: "About Us | Kuwait Taxi Service",
+  title: "About Us | Licensed Taxi Company in Kuwait | Kuwait Taxi Service",
   description:
     "Learn about Kuwait Taxi Service — a licensed, 24/7 taxi and airport transfer operator serving every governorate in Kuwait with fixed fares and professional drivers.",
 };
