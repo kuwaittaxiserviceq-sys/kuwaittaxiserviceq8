@@ -12,12 +12,23 @@ export default function About() {
   return (
     <section id="about" className="bg-white py-16 sm:py-20">
       <Container className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
-        <div className="relative order-2 grid h-80 grid-cols-2 gap-4 lg:order-1">
-          <div className="flex flex-col items-center justify-center gap-2 rounded-3xl bg-brand-green-light text-brand-green">
-            <CarFront className="h-14 w-14" strokeWidth={1.25} />
-          </div>
-          <div className="mt-8 flex flex-col items-center justify-center gap-2 rounded-3xl bg-gradient-to-br from-brand-green-dark to-brand-green text-white">
-            <MapPinned className="h-14 w-14" strokeWidth={1.25} />
+        <div className="relative order-2 h-80 overflow-hidden rounded-3xl shadow-xl shadow-zinc-900/10 sm:h-96 lg:order-1">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/kuwait-taxi-service-hero.webp"
+            alt="Kuwait Taxi chauffeur and vehicle on Gulf Road with the city skyline"
+            className="h-full w-full object-cover object-[80%_center]"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-brand-black/70 via-brand-black/10 to-transparent" />
+
+          <div className="absolute bottom-5 left-5 right-5 flex items-center gap-3 rounded-2xl bg-white/95 px-4 py-3 shadow-lg backdrop-blur">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-green-light text-brand-green">
+              <CarFront className="h-5 w-5" />
+            </span>
+            <div className="text-sm">
+              <div className="font-bold text-zinc-900">500+ Rides Completed</div>
+              <div className="text-zinc-500">Trusted across Kuwait City</div>
+            </div>
           </div>
         </div>
 
