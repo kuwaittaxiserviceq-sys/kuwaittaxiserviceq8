@@ -70,10 +70,10 @@ export default function NavbarAr() {
             ))}
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
             <Link
               href="/"
-              className="flex h-10 items-center gap-1.5 rounded-full bg-zinc-100 px-4 text-sm font-semibold text-zinc-700 transition-colors hover:bg-zinc-200"
+              className="flex h-10 shrink-0 items-center gap-1.5 rounded-full bg-zinc-100 px-4 text-sm font-semibold text-zinc-700 transition-colors hover:bg-zinc-200"
               aria-label="Switch to English"
             >
               <Globe className="h-4 w-4" />
@@ -81,7 +81,7 @@ export default function NavbarAr() {
             </Link>
             <a
               href="https://wa.me/96555205485?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%AD%D8%AC%D8%B2%20%D8%AA%D8%A7%D9%83%D8%B3%D9%8A"
-              className="hidden h-10 items-center gap-2 rounded-full bg-brand-green px-5 text-sm font-semibold text-white transition-colors hover:bg-brand-green-dark sm:flex"
+              className="hidden h-10 shrink-0 items-center gap-2 whitespace-nowrap rounded-full bg-brand-green px-5 text-sm font-semibold text-white transition-colors hover:bg-brand-green-dark sm:flex"
             >
               <MessageCircle className="h-4 w-4" />
               احجز الآن
@@ -117,6 +117,13 @@ export default function NavbarAr() {
               >
                 <Phone className="h-4 w-4" />
                 اتصل: <span dir="ltr">5520 5485</span>
+              </a>
+              <a
+                href="https://wa.me/96555205485?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%AD%D8%AC%D8%B2%20%D8%AA%D8%A7%D9%83%D8%B3%D9%8A"
+                className="mt-1 mb-2 flex h-11 items-center justify-center gap-2 rounded-full bg-brand-green text-sm font-semibold text-white transition-colors hover:bg-brand-green-dark"
+              >
+                <MessageCircle className="h-4 w-4" />
+                احجز الآن
               </a>
             </div>
           </div>

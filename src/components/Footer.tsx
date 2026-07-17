@@ -126,7 +126,11 @@ export default function Footer() {
           </a>
           <div className="flex items-start gap-3 text-sm text-zinc-400">
             <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-brand-green" />
-            Kuwait City, Kuwait
+            <span>
+              Office 34, Mezzanine Floor, Al-Manqaf Commercial Center,
+              <br />
+              Block 4, Street 14, Al-Manqaf, Kuwait
+            </span>
           </div>
         </div>
       </Container>

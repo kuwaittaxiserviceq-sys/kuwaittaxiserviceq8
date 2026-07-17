@@ -12,7 +12,6 @@ const links = [
   { href: "/#services", label: "Our Services" },
   { href: "/saudi-transfers", label: "Saudi Transfers" },
   { href: "/rates", label: "Our Rates" },
-  { href: "/reservation", label: "Reservation" },
   { href: "/contact", label: "Contact Us" },
 ];
 
@@ -81,10 +80,10 @@ export default function Navbar() {
             ))}
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
             <Link
               href="/ar"
-              className="flex h-10 items-center rounded-full bg-zinc-100 px-4 text-sm font-semibold text-zinc-700 transition-colors hover:bg-zinc-200"
+              className="flex h-10 shrink-0 items-center rounded-full bg-zinc-100 px-4 text-sm font-semibold text-zinc-700 transition-colors hover:bg-zinc-200"
               aria-label="النسخة العربية"
             >
               العربية
@@ -98,7 +97,7 @@ export default function Navbar() {
             </a>
             <Link
               href="/reservation"
-              className="flex h-10 items-center justify-center rounded-full bg-brand-green px-5 text-sm font-semibold text-white transition-colors hover:bg-brand-green-dark"
+              className="hidden h-10 shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-brand-green px-5 text-sm font-semibold text-white transition-colors hover:bg-brand-green-dark sm:flex"
             >
               Book a Ride
             </Link>
@@ -137,6 +136,13 @@ export default function Navbar() {
                 <Phone className="h-4 w-4" />
                 Call 5520 5485
               </a>
+              <Link
+                href="/reservation"
+                onClick={() => setOpen(false)}
+                className="mt-1 mb-2 flex h-11 items-center justify-center rounded-full bg-brand-green text-sm font-semibold text-white transition-colors hover:bg-brand-green-dark"
+              >
+                Book a Ride
+              </Link>
             </div>
           </div>
         )}

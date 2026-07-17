@@ -7,9 +7,11 @@ import {
   ArrowRight,
   CarFront,
   FileText,
+  FolderOpen,
   MessageCircle,
   Plus,
   Printer,
+  Save,
   Trash2,
 } from "lucide-react";
 import AdminShell from "./AdminShell";
@@ -22,6 +24,17 @@ const supabase = createClient(
 
 type DocType = "quotation" | "invoice" | "receipt";
 type Item = { desc: string; qty: string; price: string };
+
+type SavedDoc = {
+  id: string;
+  created_at: string;
+  doc_type: DocType;
+  number: string;
+  customer_name: string | null;
+  total: number | null;
+  currency: string | null;
+  payload: Record<string, unknown>;
+};
 
 const docMeta: Record<DocType, { prefix: string; title: string }> = {
   quotation: { prefix: "QT", title: "QUOTATION" },
@@ -114,8 +127,35 @@ export default function DocumentBuilder() {
   const [payMethod, setPayMethod] = useState("Cash");
   const [currency, setCurrency] = useState<Currency>("KWD");
 
+  // persistence
+  const [savedDocs, setSavedDocs] = useState<SavedDoc[]>([]);
+  const [saving, setSaving] = useState(false);
+  const [loadedId, setLoadedId] = useState<string | null>(null);
+  const [notice, setNotice] = useState("");
+
   const money = (n: number) => fmtCur(n, currency);
   const cur = CURRENCIES[currency];
+
+  const getToken = async () => {
+    const { data } = await supabase.auth.getSession();
+    return data.session?.access_token ?? null;
+  };
+
+  const loadList = async () => {
+    const token = await getToken();
+    if (!token) return;
+    try {
+      const res = await fetch("/api/admin/documents", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.ok) {
+        const json = await res.json();
+        setSavedDocs(json.rows ?? []);
+      }
+    } catch {
+      /* list is non-critical */
+    }
+  };
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -126,24 +166,117 @@ export default function DocumentBuilder() {
     return () => sub.subscription.unsubscribe();
   }, []);
 
-  // Consume a booking passed from the admin dashboard (one-shot).
+  // Consume a booking passed from the admin dashboard (one-shot) + load saved list.
   useEffect(() => {
     if (!session) return;
     const t = setTimeout(() => {
       try {
         const raw = sessionStorage.getItem("doc-prefill");
-        if (!raw) return;
-        sessionStorage.removeItem("doc-prefill");
-        const filled = prefillFields(JSON.parse(raw) as Prefill);
-        setCustomer(filled.customer);
-        setItems(filled.items);
-        setNotes(filled.notes);
+        if (raw) {
+          sessionStorage.removeItem("doc-prefill");
+          const filled = prefillFields(JSON.parse(raw) as Prefill);
+          setCustomer(filled.customer);
+          setItems(filled.items);
+          setNotes(filled.notes);
+        }
       } catch {
         /* ignore malformed prefill */
       }
+      loadList();
     }, 0);
     return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session]);
+
+  function buildPayload() {
+    return {
+      docType,
+      number,
+      date,
+      secondDate,
+      customer,
+      items,
+      discount,
+      notes,
+      paid,
+      payMethod,
+      currency,
+    };
+  }
+
+  async function saveDocument() {
+    const token = await getToken();
+    if (!token) return;
+    setSaving(true);
+    setNotice("");
+    try {
+      const res = await fetch("/api/admin/documents", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({
+          id: loadedId ?? undefined,
+          docType,
+          number,
+          customerName: customer.name || null,
+          total,
+          currency,
+          payload: buildPayload(),
+        }),
+      });
+      const json = await res.json();
+      if (res.ok) {
+        setLoadedId(json.id);
+        setNotice(loadedId ? "Updated ✓" : "Saved ✓");
+        loadList();
+      } else {
+        setNotice("Save failed — try again.");
+      }
+    } catch {
+      setNotice("Save failed — try again.");
+    } finally {
+      setSaving(false);
+      setTimeout(() => setNotice(""), 3000);
+    }
+  }
+
+  function loadSaved(doc: SavedDoc) {
+    const p = doc.payload as ReturnType<typeof buildPayload>;
+    setDocType(p.docType ?? doc.doc_type);
+    setNumber(p.number ?? doc.number);
+    setDate(p.date ?? todayISO());
+    setSecondDate(p.secondDate ?? todayISO(7));
+    setCustomer(p.customer ?? { name: "", phone: "", address: "" });
+    setItems(p.items?.length ? p.items : [{ desc: "", qty: "1", price: "" }]);
+    setDiscount(p.discount ?? "");
+    setNotes(p.notes ?? "");
+    setPaid(!!p.paid);
+    setPayMethod(p.payMethod ?? "Cash");
+    setCurrency((p.currency as Currency) ?? "KWD");
+    setLoadedId(doc.id);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  async function deleteSaved(id: string) {
+    if (!window.confirm("Delete this saved document?")) return;
+    const token = await getToken();
+    if (!token) return;
+    setSavedDocs((d) => d.filter((x) => x.id !== id));
+    if (loadedId === id) setLoadedId(null);
+    await fetch(`/api/admin/documents?id=${encodeURIComponent(id)}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    }).catch(() => loadList());
+  }
+
+  function newDocument() {
+    setLoadedId(null);
+    setNumber(genNumber(docMeta[docType].prefix));
+    setCustomer({ name: "", phone: "", address: "" });
+    setItems([{ desc: "", qty: "1", price: "" }]);
+    setDiscount("");
+    setNotes("");
+    setPaid(docType === "receipt");
+  }
 
   function switchType(t: DocType) {
     setDocType(t);
@@ -466,10 +599,14 @@ export default function DocumentBuilder() {
                   </div>
                 </div>
               </div>
-              <div className="text-right text-xs leading-5 text-emerald-100">
+              <div className="max-w-[260px] text-right text-xs leading-5 text-emerald-100">
                 <div dir="ltr">+965 5520 5485</div>
                 <div>kuwaittaxiserviceq@gmail.com</div>
                 <div>kuwaittaxiserviceq8.com</div>
+                <div>
+                  Office 34, Mezzanine Floor, Al-Manqaf Commercial Center, Block 4, Street 14,
+                  Al-Manqaf
+                </div>
               </div>
             </div>
             <div className="h-1.5 w-full bg-gradient-to-r from-brand-green via-brand-green to-brand-red" />

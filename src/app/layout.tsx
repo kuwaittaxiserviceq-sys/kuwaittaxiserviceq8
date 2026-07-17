@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { Geist, Geist_Mono } from "next/font/google";
 import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -20,6 +21,12 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://kuwaittaxiserviceq8.com"),
+  verification: {
+    google: "vZmHqKfj3W9Nz4YZkeLD1E55PfqdCm-mj032ewR0Puk",
+    other: {
+      "msvalidate.01": "343E55ACBE14E8129BE01E642041A013",
+    },
+  },
   alternates: {
     canonical: "/",
     languages: { en: "/", ar: "/ar" },
@@ -64,7 +71,10 @@ const structuredData = {
     name: "Kuwait Taxi Service",
     address: {
       "@type": "PostalAddress",
-      addressLocality: "Kuwait City",
+      streetAddress:
+        "Al-Manqaf Commercial Center, Mezzanine Floor, Office 34, Block 4, Street 14",
+      addressLocality: "Al-Manqaf",
+      addressRegion: "Ahmadi",
       addressCountry: "KW",
     },
     openingHoursSpecification: {
@@ -102,6 +112,24 @@ export default function RootLayout({
         {children}
         <FloatingWhatsApp />
         <ScrollToTop />
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-RMFMBTV6C4"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-RMFMBTV6C4');`}
+        </Script>
+        <Script id="ms-clarity" strategy="afterInteractive">
+          {`(function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "xnqnk79l3s");`}
+        </Script>
       </body>
     </html>
   );

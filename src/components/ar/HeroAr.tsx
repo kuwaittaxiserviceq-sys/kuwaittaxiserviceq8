@@ -5,18 +5,18 @@ export default function HeroAr() {
   return (
     <section
       id="home"
-      className="relative isolate overflow-hidden bg-gradient-to-b from-brand-black to-brand-green-dark"
+      className="relative isolate overflow-hidden bg-brand-black"
     >
-      <div
-        className="absolute inset-0 opacity-[0.06]"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle, #ffffff 1px, transparent 1px)",
-          backgroundSize: "26px 26px",
-        }}
+      {/* Plain <img>, not next/image: the optimizer strips EXIF and this file
+          carries GPS geo tags for local SEO. Already compressed to <100 KB. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/images/kuwait-taxi-service-hero.webp"
+        alt="خدمة تاكسي الكويت — سيارة على شارع الخليج مع أبراج الكويت عند الغروب"
+        fetchPriority="high"
+        className="absolute inset-0 -z-10 h-full w-full object-cover object-[65%_center]"
       />
-      <div className="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-brand-green/30 blur-3xl" />
-      <div className="absolute top-1/3 -left-24 h-80 w-80 rounded-full bg-brand-red/15 blur-3xl" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-l from-brand-black/95 via-brand-black/75 to-brand-black/35" />
 
       <div className="relative mx-auto grid max-w-6xl gap-14 px-6 py-20 lg:grid-cols-2 lg:items-center lg:py-28">
         <div className="flex flex-col items-start gap-6">
