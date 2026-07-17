@@ -19,16 +19,21 @@ export default function LicensedService() {
   return (
     <section className="bg-white py-16 sm:py-20">
       <Container>
-        <div className="grid grid-cols-1 gap-8 border-b border-zinc-100 pb-16 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {trustItems.map(({ icon: Icon, label }) => (
-            <div key={label} className="flex items-start gap-3">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-green-light text-brand-green">
+            <div
+              key={label}
+              className="flex items-start gap-3 rounded-2xl bg-brand-green-light/40 p-5 ring-1 ring-brand-green/10"
+            >
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-brand-green shadow-sm">
                 <Icon className="h-5 w-5" />
               </span>
               <p className="text-sm leading-6 text-zinc-600">{label}</p>
             </div>
           ))}
         </div>
+
+        <div className="mt-16 border-t border-zinc-100" />
 
         <div className="grid grid-cols-1 items-center gap-12 pt-16 lg:grid-cols-2">
           <div className="flex flex-col items-start gap-5">

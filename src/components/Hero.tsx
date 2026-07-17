@@ -17,8 +17,9 @@ export default function Hero() {
         className="absolute inset-0 -z-10 h-full w-full object-cover object-[65%_center]"
       />
       <div className="absolute inset-0 -z-10 bg-gradient-to-r from-brand-black/95 via-brand-black/75 to-brand-black/35" />
+      <div className="absolute inset-x-0 bottom-0 -z-10 h-24 bg-gradient-to-b from-transparent to-white sm:h-32" />
 
-      <div className="relative mx-auto grid max-w-6xl gap-14 px-6 py-20 lg:grid-cols-2 lg:items-center lg:py-28">
+      <div className="relative mx-auto grid max-w-6xl gap-14 px-6 pt-20 pb-14 lg:grid-cols-2 lg:items-center lg:pt-28 lg:pb-20">
         {/* Left: copy */}
         <div className="flex flex-col items-start gap-6 text-left">
           <span className="inline-flex items-center gap-2 rounded-full border border-brand-red/40 bg-brand-red/10 px-4 py-1.5 text-sm font-semibold text-red-400">
