@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     google: "vZmHqKfj3W9Nz4YZkeLD1E55PfqdCm-mj032ewR0Puk",
     other: {
       "msvalidate.01": "343E55ACBE14E8129BE01E642041A013",
+      "p:domain_verify": "3cee16a8ba4a5c6d4ff484242cdaf88b",
     },
   },
   alternates: {
@@ -96,6 +97,11 @@ const structuredData = {
         longitude: 48.1301,
       },
       hasMap: "https://www.google.com/maps/search/?api=1&query=29.0961,48.1301",
+      sameAs: [
+        "https://www.linkedin.com/company/kuwait-taxi-service-q-8/",
+        "https://www.facebook.com/profile.php?id=61591620856337",
+        "https://www.pinterest.com/kuwaittaxiserviceq8/",
+      ],
       openingHoursSpecification: {
         "@type": "OpeningHoursSpecification",
         dayOfWeek: [
@@ -139,6 +145,11 @@ export default function RootLayout({
         {children}
         <FloatingWhatsApp />
         <ScrollToTop />
+        <Script
+          src="https://analytics.ahrefs.com/analytics.js"
+          data-key="TpGfysm6rbHuALJ8ytj7RA"
+          strategy="afterInteractive"
+        />
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-RMFMBTV6C4"
           strategy="afterInteractive"

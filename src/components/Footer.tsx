@@ -28,6 +28,22 @@ function XIcon(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
+function PinterestIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+      <path d="M12 2C6.48 2 2 6.48 2 12c0 4.24 2.64 7.86 6.36 9.31-.09-.79-.17-2 .04-2.87.18-.78 1.18-4.98 1.18-4.98s-.3-.6-.3-1.49c0-1.4.81-2.44 1.82-2.44.86 0 1.27.64 1.27 1.41 0 .86-.55 2.15-.83 3.34-.24 1 .5 1.81 1.48 1.81 1.78 0 3.15-1.88 3.15-4.59 0-2.4-1.72-4.08-4.19-4.08-2.85 0-4.53 2.14-4.53 4.35 0 .86.33 1.79.75 2.29.08.1.09.19.07.29-.08.31-.25 1-.28 1.14-.04.19-.15.23-.34.14-1.25-.58-2.03-2.41-2.03-3.88 0-3.16 2.3-6.06 6.62-6.06 3.48 0 6.18 2.48 6.18 5.79 0 3.45-2.18 6.23-5.2 6.23-1.02 0-1.97-.53-2.3-1.15l-.62 2.38c-.23.87-.84 1.96-1.25 2.62.94.29 1.94.45 2.98.45 5.52 0 10-4.48 10-10S17.52 2 12 2Z" />
+    </svg>
+  );
+}
+
+function LinkedInIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+      <path d="M6.94 8.5H4.1V20h2.84V8.5ZM5.52 7.27a1.64 1.64 0 1 0 0-3.27 1.64 1.64 0 0 0 0 3.27ZM20 13.4c0-3.06-1.63-4.9-4.1-4.9-1.5 0-2.44.77-2.9 1.5h-.06l-.13-1.5H9.9c.04.94.06 2 .06 3.24V20h2.84v-6.4c0-.3.02-.6.1-.8.24-.6.76-1.2 1.66-1.2 1.17 0 1.6.9 1.6 2.2V20H20v-6.6Z" />
+    </svg>
+  );
+}
+
 const quickLinks = [
   { href: "/about", label: "About Us" },
   { href: "/#fleet", label: "Our Fleet" },
@@ -67,13 +83,28 @@ export default function Footer() {
           </p>
           <div className="flex items-center gap-3">
             {[
-              { Icon: FacebookIcon, label: "Facebook" },
-              { Icon: InstagramIcon, label: "Instagram" },
-              { Icon: XIcon, label: "X (Twitter)" },
-            ].map(({ Icon, label }) => (
+              {
+                Icon: LinkedInIcon,
+                label: "LinkedIn",
+                href: "https://www.linkedin.com/company/kuwait-taxi-service-q-8/",
+              },
+              {
+                Icon: FacebookIcon,
+                label: "Facebook",
+                href: "https://www.facebook.com/profile.php?id=61591620856337",
+              },
+              {
+                Icon: PinterestIcon,
+                label: "Pinterest",
+                href: "https://www.pinterest.com/kuwaittaxiserviceq8/",
+              },
+              { Icon: InstagramIcon, label: "Instagram", href: "#" },
+              { Icon: XIcon, label: "X (Twitter)", href: "#" },
+            ].map(({ Icon, label, href }) => (
               <a
                 key={label}
-                href="#"
+                href={href}
+                {...(href !== "#" && { target: "_blank", rel: "noopener noreferrer" })}
                 className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-brand-green"
                 aria-label={label}
               >
