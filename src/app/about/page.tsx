@@ -10,6 +10,7 @@ import Testimonials from "@/components/Testimonials";
 import Faq from "@/components/Faq";
 import Fleet from "@/components/Fleet";
 import Footer from "@/components/Footer";
+import { breadcrumbSchema, JsonLd } from "@/lib/schema";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/about" },
@@ -71,9 +72,15 @@ const aboutFaqs = [
   },
 ];
 
+const aboutBreadcrumbs = breadcrumbSchema([
+  { name: "Home", path: "/" },
+  { name: "About Us", path: "/about" },
+]);
+
 export default function AboutPage() {
   return (
     <>
+      <JsonLd data={aboutBreadcrumbs} />
       <Navbar />
       <main id="main-content" className="flex flex-1 flex-col">
         <AboutHero />

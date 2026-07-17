@@ -9,6 +9,7 @@ import {
 } from "@/components/ar/AirportTaxiAr";
 import { FleetAr } from "@/components/ar/HomeSectionsAr2";
 import FooterAr from "@/components/ar/FooterAr";
+import { breadcrumbSchema, serviceSchema, JsonLd } from "@/lib/schema";
 
 export const metadata: Metadata = {
   title: "تاكسي مطار الكويت | توصيل 24 ساعة بأسعار ثابتة | 55205485",
@@ -28,9 +29,24 @@ export const metadata: Metadata = {
   },
 };
 
+const airportSchemaAr = serviceSchema({
+  name: "تاكسي مطار الكويت",
+  description:
+    "خدمة تاكسي مطار الكويت الدولي على مدار الساعة — استقبال داخل صالة الوصول، تتبع الرحلات الجوية، 60 دقيقة انتظار مجاني، وأسعار ثابتة لجميع مناطق الكويت.",
+  path: "/ar/airport-taxi",
+  inLanguage: "ar",
+});
+
+const airportBreadcrumbsAr = breadcrumbSchema([
+  { name: "الرئيسية", path: "/ar" },
+  { name: "تاكسي المطار", path: "/ar/airport-taxi" },
+]);
+
 export default function AirportTaxiArPage() {
   return (
     <>
+      <JsonLd data={airportSchemaAr} />
+      <JsonLd data={airportBreadcrumbsAr} />
       <NavbarAr />
       <main id="main-content" className="flex flex-1 flex-col">
         <AirportHeroAr />

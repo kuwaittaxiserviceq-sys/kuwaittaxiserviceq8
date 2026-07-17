@@ -7,7 +7,7 @@ export default function LocationMap() {
       <Container className="flex flex-col gap-4">
         <div className="relative h-[420px] w-full overflow-hidden rounded-3xl bg-zinc-200">
           <iframe
-            src="https://www.google.com/maps?q=Kuwait+International+Airport&output=embed"
+            src="https://www.google.com/maps?q=29.0961,48.1301&output=embed"
             className="absolute inset-0 h-full w-full"
             style={{ border: 0 }}
             loading="lazy"
@@ -16,7 +16,7 @@ export default function LocationMap() {
           />
         </div>
         <a
-          href="https://www.google.com/maps/search/?api=1&query=Kuwait+International+Airport"
+          href="https://www.google.com/maps/search/?api=1&query=29.0961,48.1301"
           target="_blank"
           rel="noopener noreferrer"
           className="flex w-fit items-center gap-2 self-center text-sm font-semibold text-brand-green hover:underline"

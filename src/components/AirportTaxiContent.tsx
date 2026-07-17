@@ -110,7 +110,7 @@ export function AirportTaxiSteps() {
   );
 }
 
-const popularAreas = ["Kuwait City", "Salmiya", "Hawalli", "Fahaheel", "Farwaniya", "Jahra", "Mangaf", "Jabriya"];
+export const popularAreas = ["Kuwait City", "Salmiya", "Hawalli", "Fahaheel", "Farwaniya", "Jahra", "Mangaf", "Jabriya"];
 
 export function AirportFares() {
   const rows = ratesData.filter((r) => popularAreas.includes(r.area));

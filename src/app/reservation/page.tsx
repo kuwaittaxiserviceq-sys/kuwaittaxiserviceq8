@@ -6,6 +6,7 @@ import RideInclusions from "@/components/RideInclusions";
 import ReservationWhyChoose from "@/components/ReservationWhyChoose";
 import Fleet from "@/components/Fleet";
 import Footer from "@/components/Footer";
+import { breadcrumbSchema, JsonLd } from "@/lib/schema";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/reservation" },
@@ -14,9 +15,15 @@ export const metadata: Metadata = {
     "Book your Kuwait taxi or airport transfer online in under a minute — fixed fare confirmed instantly, licensed drivers, flight tracking included, 24/7.",
 };
 
+const reservationBreadcrumbs = breadcrumbSchema([
+  { name: "Home", path: "/" },
+  { name: "Reservation", path: "/reservation" },
+]);
+
 export default function ReservationPage() {
   return (
     <>
+      <JsonLd data={reservationBreadcrumbs} />
       <Navbar />
       <main id="main-content" className="flex flex-1 flex-col">
         <ReservationHero />

@@ -8,6 +8,8 @@ import GccBanner from "@/components/GccBanner";
 import Faq from "@/components/Faq";
 import Fleet from "@/components/Fleet";
 import Footer from "@/components/Footer";
+import { saudiRoutes } from "@/components/saudiRoutes";
+import { breadcrumbSchema, serviceSchema, JsonLd } from "@/lib/schema";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/saudi-transfers" },
@@ -54,9 +56,27 @@ const saudiFaqs = [
   },
 ];
 
+const saudiSchema = serviceSchema({
+  name: "Kuwait to Saudi Arabia Taxi",
+  description:
+    "Door-to-door intercity taxi between Kuwait and all major Saudi cities and airports — same vehicle across the border, fixed fares, 24/7, both directions.",
+  path: "/saudi-transfers",
+  offers: saudiRoutes.map((r) => ({
+    name: `Kuwait to ${r.city} — Sedan`,
+    price: r.sedan,
+  })),
+});
+
+const saudiBreadcrumbs = breadcrumbSchema([
+  { name: "Home", path: "/" },
+  { name: "Saudi Transfers", path: "/saudi-transfers" },
+]);
+
 export default function SaudiTransfersPage() {
   return (
     <>
+      <JsonLd data={saudiSchema} />
+      <JsonLd data={saudiBreadcrumbs} />
       <Navbar />
       <main id="main-content" className="flex flex-1 flex-col">
         <SaudiHero />

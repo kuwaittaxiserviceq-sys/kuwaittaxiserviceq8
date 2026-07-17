@@ -5,11 +5,14 @@ import {
   AirportTaxiHero,
   AirportTaxiSteps,
   AirportWhyUs,
+  popularAreas,
 } from "@/components/AirportTaxiContent";
 import RideInclusions from "@/components/RideInclusions";
 import Faq from "@/components/Faq";
 import Fleet from "@/components/Fleet";
 import Footer from "@/components/Footer";
+import { ratesData } from "@/components/ratesData";
+import { breadcrumbSchema, serviceSchema, JsonLd } from "@/lib/schema";
 
 export const metadata: Metadata = {
   alternates: {
@@ -58,9 +61,29 @@ const airportFaqs = [
   },
 ];
 
+const airportSchema = serviceSchema({
+  name: "Kuwait Airport Taxi Transfer (KWI)",
+  description:
+    "24/7 airport taxi at Kuwait International Airport — meet & greet inside arrivals, flight tracking, 60 minutes free waiting, and fixed fares to every area of Kuwait.",
+  path: "/airport-taxi",
+  offers: ratesData
+    .filter((r) => popularAreas.includes(r.area))
+    .map((r) => ({
+      name: `Kuwait Airport to ${r.area} — Sedan`,
+      price: r.sedan,
+    })),
+});
+
+const airportBreadcrumbs = breadcrumbSchema([
+  { name: "Home", path: "/" },
+  { name: "Airport Taxi", path: "/airport-taxi" },
+]);
+
 export default function AirportTaxiPage() {
   return (
     <>
+      <JsonLd data={airportSchema} />
+      <JsonLd data={airportBreadcrumbs} />
       <Navbar />
       <main id="main-content" className="flex flex-1 flex-col">
         <AirportTaxiHero />

@@ -52,46 +52,73 @@ export const metadata: Metadata = {
 
 const structuredData = {
   "@context": "https://schema.org",
-  "@type": "TaxiService",
-  name: "Kuwait Taxi Service",
-  url: "https://kuwaittaxiserviceq8.com",
-  telephone: "+96555205485",
-  email: "kuwaittaxiserviceq@gmail.com",
-  areaServed: [
-    "Al Asimah",
-    "Hawalli",
-    "Farwaniya",
-    "Ahmadi",
-    "Jahra",
-    "Mubarak Al-Kabeer",
-  ],
-  availableLanguage: ["English", "Arabic"],
-  provider: {
-    "@type": "LocalBusiness",
-    name: "Kuwait Taxi Service",
-    address: {
-      "@type": "PostalAddress",
-      streetAddress:
-        "Al-Manqaf Commercial Center, Mezzanine Floor, Office 34, Block 4, Street 14",
-      addressLocality: "Al-Manqaf",
-      addressRegion: "Ahmadi",
-      addressCountry: "KW",
-    },
-    openingHoursSpecification: {
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: [
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-        "Sunday",
+  "@graph": [
+    {
+      "@type": "TaxiService",
+      name: "Kuwait Taxi Service",
+      url: "https://kuwaittaxiserviceq8.com",
+      telephone: "+96555205485",
+      email: "kuwaittaxiserviceq@gmail.com",
+      areaServed: [
+        "Al Asimah",
+        "Hawalli",
+        "Farwaniya",
+        "Ahmadi",
+        "Jahra",
+        "Mubarak Al-Kabeer",
       ],
-      opens: "00:00",
-      closes: "23:59",
+      availableLanguage: ["English", "Arabic"],
+      provider: { "@id": "https://kuwaittaxiserviceq8.com/#business" },
     },
-  },
+    {
+      "@type": "LocalBusiness",
+      "@id": "https://kuwaittaxiserviceq8.com/#business",
+      name: "Kuwait Taxi Service",
+      url: "https://kuwaittaxiserviceq8.com",
+      telephone: "+96555205485",
+      email: "kuwaittaxiserviceq@gmail.com",
+      image: "https://kuwaittaxiserviceq8.com/images/kuwait-taxi-service-hero.webp",
+      logo: "https://kuwaittaxiserviceq8.com/icon.svg",
+      priceRange: "KD 5 – KD 120",
+      currenciesAccepted: "KWD",
+      paymentAccepted: "Cash, KNET, Credit Card, Apple Pay",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress:
+          "Al-Manqaf Commercial Center, Mezzanine Floor, Office 34, Block 4, Street 14",
+        addressLocality: "Al-Manqaf",
+        addressRegion: "Ahmadi",
+        addressCountry: "KW",
+      },
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: 29.0961,
+        longitude: 48.1301,
+      },
+      hasMap: "https://www.google.com/maps/search/?api=1&query=29.0961,48.1301",
+      openingHoursSpecification: {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+          "Sunday",
+        ],
+        opens: "00:00",
+        closes: "23:59",
+      },
+    },
+    {
+      "@type": "WebSite",
+      name: "Kuwait Taxi Service",
+      url: "https://kuwaittaxiserviceq8.com",
+      inLanguage: ["en", "ar"],
+      publisher: { "@id": "https://kuwaittaxiserviceq8.com/#business" },
+    },
+  ],
 };
 
 export default function RootLayout({
