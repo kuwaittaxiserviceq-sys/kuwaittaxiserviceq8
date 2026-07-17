@@ -41,7 +41,7 @@ export default function QuoteForm() {
             type="tel"
             name="phone"
             required
-            placeholder="Phone number"
+            placeholder="Phone no."
             className="w-full text-sm text-zinc-900 outline-none placeholder:text-zinc-400"
           />
         </label>
@@ -69,37 +69,37 @@ export default function QuoteForm() {
         />
       </label>
 
-      <div className="grid grid-cols-3 gap-3">
-        <label className="col-span-1 flex items-center gap-2 rounded-xl border border-zinc-200 px-3 py-3 focus-within:border-brand-green">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+        <label className="flex min-w-0 items-center gap-2 rounded-xl border border-zinc-200 px-3 py-3 focus-within:border-brand-green">
           <CalendarDays className="h-4 w-4 shrink-0 text-zinc-400" />
           <input
             type="date"
             name="date"
             required
             aria-label="Pickup date"
-            className="w-full text-sm text-zinc-900 outline-none"
+            className="w-full min-w-0 text-sm text-zinc-900 outline-none"
           />
         </label>
-        <label className="col-span-1 flex items-center gap-2 rounded-xl border border-zinc-200 px-3 py-3 focus-within:border-brand-green">
+        <label className="flex min-w-0 items-center gap-2 rounded-xl border border-zinc-200 px-3 py-3 focus-within:border-brand-green">
           <Clock className="h-4 w-4 shrink-0 text-zinc-400" />
           <input
             type="time"
             name="time"
             required
             aria-label="Pickup time"
-            className="w-full text-sm text-zinc-900 outline-none"
+            className="w-full min-w-0 text-sm text-zinc-900 outline-none"
           />
         </label>
-        <label className="col-span-1 flex items-center gap-2 rounded-xl border border-zinc-200 px-3 py-3 focus-within:border-brand-green">
+        <label className="col-span-2 flex min-w-0 items-center gap-2 rounded-xl border border-zinc-200 px-3 py-3 focus-within:border-brand-green sm:col-span-1">
           <Users className="h-4 w-4 shrink-0 text-zinc-400" />
           <input
             type="number"
             name="pax"
             min={1}
             required
-            placeholder="Pax"
+            placeholder="Passengers"
             aria-label="Passengers"
-            className="w-full text-sm text-zinc-900 outline-none placeholder:text-zinc-400"
+            className="w-full min-w-0 text-sm text-zinc-900 outline-none placeholder:text-zinc-400"
           />
         </label>
       </div>

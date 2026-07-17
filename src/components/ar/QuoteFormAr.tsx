@@ -50,16 +50,16 @@ export default function QuoteFormAr() {
         <input type="text" name="dropoff" required placeholder="الوجهة" className={input} />
       </label>
 
-      <div className="grid grid-cols-3 gap-3">
-        <label className={box}>
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+        <label className={`${box} min-w-0`}>
           <CalendarDays className="h-4 w-4 shrink-0 text-zinc-400" />
           <input type="date" name="date" required aria-label="تاريخ الانطلاق" className={input} />
         </label>
-        <label className={box}>
+        <label className={`${box} min-w-0`}>
           <Clock className="h-4 w-4 shrink-0 text-zinc-400" />
           <input type="time" name="time" required aria-label="وقت الانطلاق" className={input} />
         </label>
-        <label className={box}>
+        <label className={`${box} col-span-2 min-w-0 sm:col-span-1`}>
           <Users className="h-4 w-4 shrink-0 text-zinc-400" />
           <input
             type="number"
