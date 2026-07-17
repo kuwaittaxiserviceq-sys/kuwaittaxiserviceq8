@@ -1,4 +1,4 @@
-import { CarFront, CheckCircle2, Plane, ShieldCheck, Snowflake, Wallet } from "lucide-react";
+import { CheckCircle2, Plane, ShieldCheck, Snowflake, Wallet } from "lucide-react";
 import Container from "./Container";
 
 const trustItems = [
@@ -53,16 +53,24 @@ export default function LicensedService() {
             </ul>
           </div>
 
-          <div className="relative flex h-72 items-center justify-center overflow-hidden rounded-3xl bg-gradient-to-br from-brand-green-dark to-brand-green sm:h-96">
-            <div
-              className="absolute inset-0 opacity-10"
-              style={{
-                backgroundImage:
-                  "radial-gradient(circle, #ffffff 1px, transparent 1px)",
-                backgroundSize: "22px 22px",
-              }}
+          <div className="relative h-72 overflow-hidden rounded-3xl shadow-xl shadow-zinc-900/10 sm:h-96">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/kuwait-taxi-service-hero.webp"
+              alt="Licensed Kuwait Taxi chauffeur and vehicle ready for an airport pickup"
+              className="h-full w-full object-cover object-[30%_center]"
             />
-            <CarFront className="relative h-24 w-24 text-white/90" strokeWidth={1.25} />
+            <div className="absolute inset-0 bg-gradient-to-t from-brand-black/70 via-brand-black/0 to-transparent" />
+
+            <div className="absolute bottom-5 left-5 flex items-center gap-3 rounded-2xl bg-white/95 px-4 py-3 shadow-lg backdrop-blur">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-green-light text-brand-green">
+                <ShieldCheck className="h-5 w-5" />
+              </span>
+              <div className="text-sm">
+                <div className="font-bold text-zinc-900">100% Licensed &amp; Insured</div>
+                <div className="text-zinc-500">Every ride, every driver</div>
+              </div>
+            </div>
           </div>
         </div>
       </Container>
