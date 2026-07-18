@@ -1,45 +1,23 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
-// html2pdf will be imported dynamically to avoid SSR issues
-
-import { 
-    Printer, 
-    Plus, 
-    Trash2, 
-    Building, 
-    User, 
-    FileText, 
-    Settings, 
-    Layout, 
-    RotateCcw,
-    Share2,
-    Copy,
-    Phone,
-    Mail,
-    Globe,
-    MapPin,
-    Hash,
-    Calendar,
-    ChevronDown,
-    Car
+import {
+    Printer, Plus, Trash2, FileText, RotateCcw, Mail, Phone,
+    Globe, MapPin, Car, Calendar, Clock, Users, Download,
+    MessageCircle, Save, CheckCircle, ChevronDown, ChevronUp,
+    Percent, DollarSign, Copy, ExternalLink, Bookmark, FolderOpen
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { 
-    Select, 
-    SelectContent, 
-    SelectItem, 
-    SelectTrigger, 
-    SelectValue 
-} from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 
-interface InvoiceItem {
+type DocType = 'quotation' | 'invoice' | 'receipt' | 'letterhead';
+
+interface Item {
     id: string;
     description: string;
     quantity: number;
@@ -60,11 +38,11 @@ interface CompanyProfile {
     swiftCode?: string;
 }
 
-const DEFAULT_PROFILES: Record<string, CompanyProfile> = {
-    'taxi-ksa': {
+const PROFILES: Record<string, CompanyProfile> = {
+    'kuwait-taxi': {
         name: 'Kuwait Taxi Service',
         address: 'Kuwait City, Kuwait',
-        phone: 'kuwaittaxiserviceq@gmail.com',
+        phone: '+965 XXXX XXXX',
         email: 'kuwaittaxiserviceq@gmail.com',
         website: 'www.kuwaittaxiserviceq8.com',
         logoUrl: '/logo.svg',
@@ -72,705 +50,791 @@ const DEFAULT_PROFILES: Record<string, CompanyProfile> = {
         accountName: 'Kuwait Taxi Service',
         accountNumber: '123456789012345',
         iban: 'KW81NBOK0000000000001234560101',
-        swiftCode: 'NBOKKWKW'
+        swiftCode: 'NBOKKWKW',
     },
-    'airport-travel': {
-        name: 'Airport Travel Taxis',
-        address: 'Heathrow Airport, London, UK',
-        phone: '+44 20 8123 4567',
-        email: 'booking@airporttraveltaxis.com',
-        website: 'www.airporttraveltaxis.com',
-        bankName: 'Barclays Bank',
-        accountName: 'Airport Travel Taxis Ltd',
-        accountNumber: '98765432',
-        iban: 'GB29BARC20123498765432',
-        swiftCode: 'BARCGB22XXX'
-    },
-    'car-ride-arabia': {
-        name: 'Car Ride Arabia',
-        address: 'Dubai, UAE',
-        phone: '+971 4 123 4567',
-        email: 'info@carridearabia.com',
-        website: 'www.carridearabia.com',
-        bankName: 'Emirates NBD',
-        accountName: 'Car Ride Arabia FZ-LLC',
-        accountNumber: '1012345678901',
-        iban: 'AE1200300001012345678901',
-        swiftCode: 'EIBNDAEADXXX'
-    }
 };
 
-const PRESET_VEHICLES = [
-    'Camry',
-    'GMC Yukon',
-    'Hyundai Staria',
-    'Hiace',
-    'Fortuner'
-];
+const VEHICLES = ['Toyota Camry', 'GMC Yukon', 'Hyundai Staria', 'Hiace', 'Fortuner', 'Land Cruiser'];
+const CURRENCIES = ['KWD', 'SAR', 'AED', 'BHD', 'OMR', 'QAR', 'USD'];
 
+const DOC_META: Record<DocType, { label: string; prefix: string; color: string }> = {
+    quotation: { label: 'QUOTATION',  prefix: 'QT',  color: '#2563eb' },
+    invoice:   { label: 'INVOICE',    prefix: 'INV', color: '#111827' },
+    receipt:   { label: 'RECEIPT',    prefix: 'RCT', color: '#059669' },
+    letterhead:{ label: 'LETTERHEAD', prefix: 'LH',  color: '#7c3aed' },
+};
 
-export default function UniversalInvoiceGenerator() {
+function genRef(prefix: string) {
+    const d = new Date();
+    const p = (n: number) => String(n).padStart(2, '0');
+    return `${prefix}-${String(d.getFullYear()).slice(2)}${p(d.getMonth()+1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}`;
+}
+
+const DRAFT_KEY = 'invoice-generator-draft';
+
+export default function InvoiceGeneratorPage() {
     const router = useRouter();
-    const [mode, setMode] = useState<'invoice' | 'letterhead'>('invoice');
-    const [profile, setProfile] = useState<CompanyProfile>(DEFAULT_PROFILES['taxi-ksa']);
-    const [recipient, setRecipient] = useState({
-        name: '',
-        details: '',
-        email: '',
-        phone: ''
+    const [docType, setDocType] = useState<DocType>('invoice');
+    const [profile, setProfile] = useState<CompanyProfile>(PROFILES['kuwait-taxi']);
+    const [isMounted, setIsMounted] = useState(false);
+    const [sendingEmail, setSendingEmail] = useState(false);
+    const [emailSent, setEmailSent] = useState(false);
+    const [draftSaved, setDraftSaved] = useState(false);
+    const [openSection, setOpenSection] = useState<string | null>('items');
+
+    const [recipient, setRecipient] = useState({ name: '', details: '', email: '', phone: '' });
+    const [trip, setTrip] = useState({ pickup: '', destination: '', date: '', time: '', passengers: '', vehicle: '', showOnDoc: true });
+    const [items, setItems] = useState<Item[]>([{ id: '1', description: 'Transport Service', quantity: 1, price: 0 }]);
+    const [meta, setMeta] = useState({
+        ref: '',
+        date: '',
+        dueDate: '',
+        validUntil: '',
+        currency: 'KWD',
+        taxShow: false,
+        taxRate: 5,
+        taxLabel: 'VAT',
+        discountType: 'fixed' as 'fixed' | 'percent',
+        discountValue: 0,
+        paymentStatus: 'Unpaid',
+        paymentMethod: 'Cash to Driver',
+        notes: 'Terms & Conditions:\n• Price includes fuel and toll fees.\n• Cancellation is free up to 24 hours before pickup.',
+        subject: 'Official Confirmation of Transport Services',
+        letterBody: 'Dear Client,\n\nWe are pleased to confirm your upcoming transport arrangements. Our professional chauffeur will be prepared at your designated pickup location.\n\nPlease ensure your booking details are correct. Thank you for choosing our services.',
+    });
+    const [bank, setBank] = useState({
+        show: false,
+        bankName: PROFILES['kuwait-taxi'].bankName ?? '',
+        accountName: PROFILES['kuwait-taxi'].accountName ?? '',
+        accountNumber: PROFILES['kuwait-taxi'].accountNumber ?? '',
+        iban: PROFILES['kuwait-taxi'].iban ?? '',
+        swift: PROFILES['kuwait-taxi'].swiftCode ?? '',
+        transferNote: 'Please send transaction screenshot on WhatsApp once completed.',
     });
 
     useEffect(() => {
         supabase.auth.getSession().then(({ data: { session } }) => {
             if (!session) router.push('/admin/login');
         });
-    }, [router]);
-
-    const [vehicle, setVehicle] = useState({
-        name: 'Toyota Camry',
-        showOnDocument: true
-    });
-
-    const [bankDetails, setBankDetails] = useState({
-        showOnDocument: false,
-        bankName: DEFAULT_PROFILES['taxi-ksa'].bankName || '',
-        accountName: DEFAULT_PROFILES['taxi-ksa'].accountName || '',
-        accountNumber: DEFAULT_PROFILES['taxi-ksa'].accountNumber || '',
-        iban: DEFAULT_PROFILES['taxi-ksa'].iban || '',
-        swiftCode: DEFAULT_PROFILES['taxi-ksa'].swiftCode || '',
-        notes: 'Please send transaction screenshot on WhatsApp once completed.'
-    });
-
-
-    const [isMounted, setIsMounted] = useState(false);
-    const [meta, setMeta] = useState({
-        number: '',
-        date: '',
-        currency: 'KWD',
-        taxRate: 0,
-        status: 'Unpaid',
-        paymentMethod: 'Cash to Driver',
-        subject: 'Official Confirmation of Transport Services',
-        letterBody: 'Dear Client,\n\nWe are pleased to confirm your upcoming transport arrangements. Our professional chauffeur will be prepared at your designated location. \n\nPlease ensure your booking details are correct. Thank you for choosing our services.',
-        notes: 'Terms & Conditions:\n• Price includes fuel and toll fees.\n• Cancellation is free up to 24 hours before pickup.',
-    });
-
-    const [items, setItems] = useState<InvoiceItem[]>([
-        { id: '1', description: 'VIP Airport Transfer Service', quantity: 1, price: 350 }
-    ]);
-
-    useEffect(() => {
-        setIsMounted(true);
         setMeta(prev => ({
             ...prev,
-            number: 'INV-' + Math.floor(Math.random() * 90000 + 10000),
-            date: new Date().toISOString().split('T')[0],
+            ref: genRef(DOC_META[docType].prefix),
+            date: new Date().toLocaleDateString('en-CA'),
+            dueDate: new Date(Date.now() + 7*86400000).toLocaleDateString('en-CA'),
+            validUntil: new Date(Date.now() + 14*86400000).toLocaleDateString('en-CA'),
         }));
+        // Load draft
+        try {
+            const saved = localStorage.getItem(DRAFT_KEY);
+            if (saved) {
+                const draft = JSON.parse(saved);
+                if (draft.docType) setDocType(draft.docType);
+                if (draft.recipient) setRecipient(draft.recipient);
+                if (draft.trip) setTrip(draft.trip);
+                if (draft.items) setItems(draft.items);
+                if (draft.meta) setMeta(m => ({ ...m, ...draft.meta }));
+                if (draft.bank) setBank(b => ({ ...b, ...draft.bank }));
+            }
+        } catch {}
+        setIsMounted(true);
     }, []);
+
+    // Update ref when doc type changes
+    useEffect(() => {
+        if (isMounted) setMeta(m => ({ ...m, ref: genRef(DOC_META[docType].prefix) }));
+    }, [docType]);
 
     if (!isMounted) return null;
 
-    const addItem = () => {
-        setItems([...items, { id: Date.now().toString(), description: '', quantity: 1, price: 0 }]);
+    // Calculations
+    const subtotal = items.reduce((s, i) => s + i.quantity * i.price, 0);
+    const discountAmt = meta.discountType === 'percent'
+        ? (subtotal * meta.discountValue) / 100
+        : meta.discountValue;
+    const taxable = subtotal - discountAmt;
+    const taxAmt = meta.taxShow ? (taxable * meta.taxRate) / 100 : 0;
+    const total = taxable + taxAmt;
+
+    const fmt = (n: number) => `${meta.currency} ${n.toFixed(meta.currency === 'KWD' || meta.currency === 'BHD' || meta.currency === 'OMR' ? 3 : 2)}`;
+
+    // Save draft
+    const saveDraft = () => {
+        localStorage.setItem(DRAFT_KEY, JSON.stringify({ docType, recipient, trip, items, meta, bank }));
+        setDraftSaved(true);
+        setTimeout(() => setDraftSaved(false), 2000);
     };
 
-    const removeItem = (id: string) => {
-        if (items.length > 1) {
-            setItems(items.filter(item => item.id !== id));
-        }
+    // Clear
+    const clearAll = () => {
+        localStorage.removeItem(DRAFT_KEY);
+        setRecipient({ name: '', details: '', email: '', phone: '' });
+        setTrip({ pickup: '', destination: '', date: '', time: '', passengers: '', vehicle: '', showOnDoc: true });
+        setItems([{ id: '1', description: 'Transport Service', quantity: 1, price: 0 }]);
+        setMeta(m => ({ ...m, discountValue: 0, taxShow: false, paymentStatus: 'Unpaid' }));
     };
 
-    const updateItem = (id: string, field: keyof InvoiceItem, value: any) => {
-        setItems(items.map(item => item.id === id ? { ...item, [field]: value } : item));
+    // Download PDF
+    const downloadPDF = async () => {
+        const el = document.getElementById('print-doc');
+        if (!el) return;
+        const clientSlug = recipient.name ? recipient.name.replace(/\s+/g, '-') : 'Client';
+        const filename = `${DOC_META[docType].label}-${meta.ref}-${clientSlug}.pdf`;
+        const opt = {
+            margin: [0,0,0,0] as [number,number,number,number],
+            filename,
+            image: { type: 'jpeg' as const, quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true, windowWidth: 794, scrollY: 0 },
+            jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const },
+        };
+        try {
+            // @ts-ignore
+            const html2pdf = (await import('html2pdf.js')).default;
+            await html2pdf().set(opt).from(el).save();
+        } catch { window.print(); }
     };
 
-    const subtotal = items.reduce((acc, item) => acc + (item.quantity * item.price), 0);
-    const taxAmount = (subtotal * meta.taxRate) / 100;
-    const total = subtotal + taxAmount;
+    // Send email
+    const sendEmail = async () => {
+        if (!recipient.email) { alert('Enter client email first'); return; }
+        setSendingEmail(true);
+        try {
+            const res = await fetch('/api/send-invoice-email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    to: recipient.email,
+                    clientName: recipient.name,
+                    refId: meta.ref,
+                    docType,
+                    total: fmt(total),
+                    currency: meta.currency,
+                    fromCompany: profile.name,
+                }),
+            });
+            if (res.ok) { setEmailSent(true); setTimeout(() => setEmailSent(false), 3000); }
+            else alert('Email send failed');
+        } catch { alert('Network error'); }
+        setSendingEmail(false);
+    };
+
+    // WhatsApp share
+    const whatsAppShare = () => {
+        const msg = `*${DOC_META[docType].label} from ${profile.name}*\nRef: ${meta.ref}\nClient: ${recipient.name}\nAmount: ${fmt(total)}\nStatus: ${meta.paymentStatus}\n\nThank you for choosing us!`;
+        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+    };
+
+    const Section = ({ id, title, children }: { id: string; title: string; children: React.ReactNode }) => (
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <button
+                className="w-full flex items-center justify-between px-5 py-3.5 text-left hover:bg-gray-50 transition-colors"
+                onClick={() => setOpenSection(openSection === id ? null : id)}
+            >
+                <span className="text-xs font-black text-gray-700 uppercase tracking-widest">{title}</span>
+                {openSection === id ? <ChevronUp className="w-3.5 h-3.5 text-gray-400" /> : <ChevronDown className="w-3.5 h-3.5 text-gray-400" />}
+            </button>
+            {openSection === id && <div className="px-5 pb-5 pt-2 space-y-3 border-t border-gray-100">{children}</div>}
+        </div>
+    );
 
     return (
-        <div className="max-w-[1400px] mx-auto min-h-screen bg-gray-50 pb-20">
-            {/* Simple Top Bar */}
-            <div className="sticky top-0 z-30 flex flex-col md:flex-row justify-between items-center gap-4 bg-white border-b px-6 py-4 print:hidden">
-                <div className="flex items-center gap-2">
-                    <FileText className="w-5 h-5 text-gray-600" />
-                    <h1 className="text-xl font-bold text-gray-900 tracking-tight">Generator</h1>
-                </div>
+        <div className="max-w-[1500px] mx-auto min-h-screen bg-gray-50 pb-24">
 
-                <div className="flex items-center gap-3">
-                    <div className="flex bg-gray-100 p-1 rounded-lg mr-4">
-                        <button 
-                            onClick={() => setMode('invoice')}
-                            className={cn(
-                                "px-4 py-1 rounded text-xs font-semibold transition-all",
-                                mode === 'invoice' ? "bg-white shadow text-gray-900" : "text-gray-500"
-                            )}
-                        >
-                            Invoice
-                        </button>
-                        <button 
-                            onClick={() => setMode('letterhead')}
-                            className={cn(
-                                "px-4 py-1 rounded text-xs font-semibold transition-all",
-                                mode === 'letterhead' ? "bg-white shadow text-gray-900" : "text-gray-500"
-                            )}
-                        >
-                            Letterhead
-                        </button>
+            {/* Topbar */}
+            <div className="sticky top-0 z-30 bg-white border-b border-gray-200 px-4 md:px-6 py-3 print:hidden">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                        <FileText className="w-5 h-5 text-gray-500" />
+                        <h1 className="text-base font-black text-gray-900">Document Generator</h1>
+                        {/* Doc type tabs */}
+                        <div className="hidden sm:flex bg-gray-100 rounded-lg p-1 gap-0.5">
+                            {(['quotation','invoice','receipt','letterhead'] as DocType[]).map(t => (
+                                <button
+                                    key={t}
+                                    onClick={() => setDocType(t)}
+                                    className={cn(
+                                        'px-3 py-1 rounded-md text-xs font-bold transition-all capitalize',
+                                        docType === t ? 'bg-white shadow text-gray-900' : 'text-gray-500 hover:text-gray-700'
+                                    )}
+                                >{t}</button>
+                            ))}
+                        </div>
                     </div>
-
-                    <Button variant="outline" size="sm" onClick={async () => {
-                        const clientName = recipient.name ? recipient.name.replace(/\s+/g, '-') : 'Client';
-                        const refId = meta.number || 'DRAFT';
-                        const dateStr = meta.date || new Date().toISOString().split('T')[0];
-                        const filename = `${mode === 'invoice' ? 'Invoice' : 'Letter'}-${refId}-${clientName}-${dateStr}.pdf`;
-                        
-                        const element = document.getElementById('printable-area');
-                        if (!element) return;
-
-                        const opt = {
-                            margin: [0, 0, 0, 0] as [number, number, number, number],
-                            filename: filename,
-                            image: { type: 'jpeg' as const, quality: 0.98 },
-                            html2canvas: { 
-                                scale: 2, 
-                                useCORS: true, 
-                                letterRendering: true,
-                                windowWidth: 1200,
-                                scrollY: 0,
-                                scrollX: 0
-                            },
-                            jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const }
-                        };
-
-                        try {
-                            // @ts-ignore - dynamic import to avoid SSR 'self is not defined'
-                            const html2pdf = (await import('html2pdf.js')).default;
-                            await html2pdf().set(opt).from(element).save();
-                        } catch (error) {
-                            console.error('PDF Generation Error:', error);
-                            window.print();
-                        }
-                    }} className="font-bold border-gray-300">
-                        <Printer className="w-4 h-4 mr-2" /> Download PDF
-                    </Button>
-                    <Button variant="outline" size="sm" onClick={() => {
-                        const subject = `${mode.toUpperCase()} from ${profile.name}`;
-                        const body = `${mode.toUpperCase()} \nFrom: ${profile.name}\nTo: ${recipient.name}\nTotal: ${meta.currency} ${total.toFixed(2)}`;
-                        window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-                    }} className="font-bold border-gray-300">
-                        <Mail className="w-4 h-4 mr-2" /> Email Info
-                    </Button>
+                    <div className="flex flex-wrap items-center gap-2">
+                        <Button size="sm" variant="outline" onClick={saveDraft} className="gap-1.5 h-8 text-xs border-gray-300">
+                            {draftSaved ? <CheckCircle className="w-3.5 h-3.5 text-green-500" /> : <Save className="w-3.5 h-3.5" />}
+                            {draftSaved ? 'Saved!' : 'Save Draft'}
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={whatsAppShare} className="gap-1.5 h-8 text-xs border-green-300 text-green-700 hover:bg-green-50">
+                            <MessageCircle className="w-3.5 h-3.5" /> WhatsApp
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={sendEmail} disabled={sendingEmail} className={cn('gap-1.5 h-8 text-xs border-gray-300', emailSent && 'border-green-300 text-green-600')}>
+                            {emailSent ? <CheckCircle className="w-3.5 h-3.5" /> : <Mail className="w-3.5 h-3.5" />}
+                            {emailSent ? 'Sent!' : sendingEmail ? 'Sending...' : 'Send Email'}
+                        </Button>
+                        <Button size="sm" onClick={downloadPDF} className="gap-1.5 h-8 text-xs bg-gray-900 text-white hover:bg-gray-700">
+                            <Download className="w-3.5 h-3.5" /> Download PDF
+                        </Button>
+                    </div>
+                </div>
+                {/* Mobile doc type */}
+                <div className="sm:hidden flex gap-1 mt-2 overflow-x-auto">
+                    {(['quotation','invoice','receipt','letterhead'] as DocType[]).map(t => (
+                        <button
+                            key={t}
+                            onClick={() => setDocType(t)}
+                            className={cn(
+                                'px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap capitalize',
+                                docType === t ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600'
+                            )}
+                        >{t}</button>
+                    ))}
                 </div>
             </div>
 
-            <div className="flex flex-col lg:flex-row gap-8 p-6 lg:p-10">
-                
-                {/* Editor Panel */}
-                <div className="w-full lg:w-[400px] space-y-6 print:hidden">
-                    
-                    {/* Brand */}
-                    <div className="bg-white rounded-xl border p-6 shadow-sm space-y-4">
-                        <Label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1 block">Business Profile</Label>
-                        <Select 
-                            onValueChange={(val) => {
-                                const selected = DEFAULT_PROFILES[val];
-                                setProfile({...selected});
-                                setBankDetails(prev => ({
-                                    ...prev,
-                                    bankName: selected.bankName || '',
-                                    accountName: selected.accountName || '',
-                                    accountNumber: selected.accountNumber || '',
-                                    iban: selected.iban || '',
-                                    swiftCode: selected.swiftCode || '',
-                                }));
-                            }} 
-                            defaultValue="taxi-ksa"
-                        >
-                            <SelectTrigger className="font-semibold text-gray-900 rounded-lg">
-                                <SelectValue placeholder="Select Business" />
-                            </SelectTrigger>
-                            <SelectContent className="bg-white">
-                                {Object.entries(DEFAULT_PROFILES).map(([key, p]) => (
-                                    <SelectItem key={key} value={key} className="font-semibold">{p.name}</SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                        <div className="space-y-3 pt-2 border-t">
-                            <div>
-                                <Label className="text-[10px] text-gray-400 uppercase ml-1">Company Name</Label>
-                                <Input placeholder="Company Name" className="h-9 text-sm font-semibold" value={profile.name} onChange={(e) => setProfile({...profile, name: e.target.value})} />
-                            </div>
-                            <div>
-                                <Label className="text-[10px] text-gray-400 uppercase ml-1">Address</Label>
-                                <Input placeholder="Address" className="h-9 text-sm" value={profile.address} onChange={(e) => setProfile({...profile, address: e.target.value})} />
-                            </div>
-                            <div>
-                                <Label className="text-[10px] text-gray-400 uppercase ml-1">Contact Email</Label>
-                                <Input placeholder="Contact Email" className="h-9 text-sm" value={profile.phone} onChange={(e) => setProfile({...profile, phone: e.target.value})} />
-                            </div>
-                            <div>
-                                <Label className="text-[10px] text-gray-400 uppercase ml-1">Email</Label>
-                                <Input placeholder="Email" className="h-9 text-sm" value={profile.email} onChange={(e) => setProfile({...profile, email: e.target.value})} />
-                            </div>
-                            <div>
-                                <Label className="text-[10px] text-gray-400 uppercase ml-1">Website</Label>
-                                <Input placeholder="Website" className="h-9 text-sm" value={profile.website} onChange={(e) => setProfile({...profile, website: e.target.value})} />
-                            </div>
-                        </div>
-                    </div>
+            <div className="flex flex-col lg:flex-row gap-6 p-4 md:p-6 print:p-0">
 
-                    {/* Client */}
-                    <div className="bg-white rounded-xl border p-6 shadow-sm space-y-4">
-                        <Label className="text-xs font-bold text-gray-500 uppercase tracking-widest block font-sans">Client Details</Label>
-                        <div className="space-y-3 font-sans">
-                            <Input placeholder="Client Name" className="font-semibold" value={recipient.name} onChange={(e) => setRecipient({...recipient, name: e.target.value})} />
-                            <Textarea placeholder="Client Address / Info" className="text-sm min-h-[80px]" value={recipient.details} onChange={(e) => setRecipient({...recipient, details: e.target.value})} />
-                        </div>
-                    </div>
+                {/* ─── EDITOR PANEL ─── */}
+                <div className="w-full lg:w-[360px] xl:w-[400px] space-y-3 print:hidden shrink-0">
 
-                    {/* Content */}
-                    {mode === 'invoice' ? (
-                        <div className="bg-white rounded-xl border p-6 shadow-sm space-y-4">
-                            <div className="flex justify-between items-center mb-2">
-                                <Label className="text-xs font-bold text-gray-500 uppercase tracking-widest">Items</Label>
-                                <Button size="sm" variant="ghost" className="text-blue-600 hover:bg-blue-50 text-xs px-2 h-7" onClick={addItem}>
-                                    <Plus className="w-3 h-3 mr-1" /> Add Row
-                                </Button>
-                            </div>
-                            <div className="space-y-3">
-                                {items.map((item) => (
-                                    <div key={item.id} className="space-y-2 border-b pb-3 last:border-0">
-                                        <div className="flex gap-2">
-                                            <Input placeholder="Description" value={item.description} onChange={(e) => updateItem(item.id, 'description', e.target.value)} className="h-8 text-sm" />
-                                            <Button size="icon" variant="ghost" onClick={() => removeItem(item.id)} className="h-8 w-8 text-gray-300 hover:text-red-500">
-                                                <Trash2 className="w-4 h-4" />
-                                            </Button>
-                                        </div>
-                                        <div className="flex gap-2">
-                                            <div className="w-1/3">
-                                                <Label className="text-[10px] text-gray-400 uppercase ml-1">Qty</Label>
-                                                <Input type="number" value={item.quantity} onChange={(e) => updateItem(item.id, 'quantity', parseFloat(e.target.value))} className="h-8 text-xs text-center" />
-                                            </div>
-                                            <div className="flex-1">
-                                                <Label className="text-[10px] text-gray-400 uppercase ml-1">Price</Label>
-                                                <Input type="number" value={item.price} onChange={(e) => updateItem(item.id, 'price', parseFloat(e.target.value))} className="h-8 text-xs text-right" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                            <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t">
-                                <div>
-                                    <Label className="text-[10px] text-gray-400 uppercase ml-1">Currency</Label>
-                                    <Input 
-                                        value={meta.currency} 
-                                        onChange={(e) => setMeta({...meta, currency: e.target.value.toUpperCase()})}
-                                        className="h-8 font-bold text-xs w-full mb-1.5"
-                                        placeholder="e.g. KWD"
-                                    />
-                                    <div className="flex gap-1 flex-wrap">
-                                        {['KWD', 'KWD', 'BHD', 'OMR', 'AED', 'USD'].map(c => (
-                                            <span 
-                                                key={c}
-                                                onClick={() => setMeta({...meta, currency: c})}
-                                                className="text-[9px] px-1.5 py-0.5 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded cursor-pointer font-bold"
-                                            >
-                                                {c}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </div>
-                                <div className="text-right">
-                                    <p className="text-[10px] text-gray-400 uppercase">Subtotal</p>
-                                    <p className="font-bold text-gray-900">{meta.currency} {subtotal.toLocaleString()}</p>
-                                </div>
-                            </div>
+                    {/* Business Profile */}
+                    <Section id="profile" title="Business Profile">
+                        <div>
+                            <Label className="text-[10px] text-gray-400 uppercase">Company Name</Label>
+                            <Input value={profile.name} onChange={e => setProfile({...profile, name: e.target.value})} className="h-9 text-sm font-bold" />
                         </div>
-                    ) : (
-                        <div className="bg-white rounded-xl border p-6 shadow-sm space-y-4 font-sans">
-                            <Label className="text-xs font-bold text-gray-500 uppercase tracking-widest block font-sans">Letter Content</Label>
-                            <Input placeholder="Subject" value={meta.subject} onChange={(e) => setMeta({...meta, subject: e.target.value})} className="font-semibold text-sm h-10" />
-                            <Textarea placeholder="Message..." className="text-sm min-h-[200px]" value={meta.letterBody} onChange={(e) => setMeta({...meta, letterBody: e.target.value})} />
-                        </div>
-                    )}
-
-                    {/* Vehicle */}
-                    <div className="bg-white rounded-xl border p-6 shadow-sm space-y-4">
-                        <div className="flex justify-between items-center">
-                            <Label className="text-xs font-bold text-gray-500 uppercase tracking-widest block font-sans">Vehicle Details</Label>
-                            <label className="flex items-center gap-2 text-[10px] font-bold text-gray-400 cursor-pointer">
-                                <input 
-                                    type="checkbox" 
-                                    checked={vehicle.showOnDocument} 
-                                    onChange={(e) => setVehicle({...vehicle, showOnDocument: e.target.checked})} 
-                                />
-                                SHOW ON DOC
-                            </label>
-                        </div>
-                        <div className="space-y-3 font-sans">
-                            <Input 
-                                placeholder="Type Vehicle Name (e.g. Camry, GMC Yukon)" 
-                                value={vehicle.name} 
-                                onChange={(e) => setVehicle({...vehicle, name: e.target.value})}
-                                className="font-semibold text-gray-900 h-10"
-                            />
-                            <div className="flex flex-wrap gap-1.5 mt-2">
-                                {PRESET_VEHICLES.map((v) => (
-                                    <span 
-                                        key={v} 
-                                        onClick={() => setVehicle({...vehicle, name: v})}
-                                        className="text-[10px] px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded cursor-pointer font-semibold transition-colors"
-                                    >
-                                        {v}
-                                    </span>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Bank Details */}
-                    <div className="bg-white rounded-xl border p-6 shadow-sm space-y-4">
-                        <div className="flex justify-between items-center">
-                            <Label className="text-xs font-bold text-gray-500 uppercase tracking-widest block font-sans">Bank Details</Label>
-                            <label className="flex items-center gap-2 text-[10px] font-bold text-gray-400 cursor-pointer">
-                                <input 
-                                    type="checkbox" 
-                                    checked={bankDetails.showOnDocument} 
-                                    onChange={(e) => setBankDetails({...bankDetails, showOnDocument: e.target.checked})} 
-                                    className="accent-blue-600 rounded animate-pulse"
-                                />
-                                SHOW ON DOC
-                            </label>
-                        </div>
-                        <div className="space-y-3 font-sans">
+                        <div className="grid grid-cols-2 gap-2">
                             <div>
-                                <Label className="text-[10px] text-gray-400 uppercase ml-1">Bank Name</Label>
-                                <Input 
-                                    placeholder="e.g. NBK, KFH, Gulf Bank" 
-                                    value={bankDetails.bankName} 
-                                    onChange={(e) => setBankDetails({...bankDetails, bankName: e.target.value})} 
-                                    className="h-9 text-xs font-semibold focus-visible:ring-blue-500" 
-                                />
+                                <Label className="text-[10px] text-gray-400 uppercase">Phone</Label>
+                                <Input value={profile.phone} onChange={e => setProfile({...profile, phone: e.target.value})} className="h-9 text-xs" />
                             </div>
                             <div>
-                                <Label className="text-[10px] text-gray-400 uppercase ml-1">Account Holder Name</Label>
-                                <Input 
-                                    placeholder="e.g. Kuwait Taxi Service" 
-                                    value={bankDetails.accountName} 
-                                    onChange={(e) => setBankDetails({...bankDetails, accountName: e.target.value})} 
-                                    className="h-9 text-xs font-semibold focus-visible:ring-blue-500" 
-                                />
-                            </div>
-                            <div>
-                                <Label className="text-[10px] text-gray-400 uppercase ml-1">Account Number</Label>
-                                <Input 
-                                    placeholder="e.g. 123456789012345" 
-                                    value={bankDetails.accountNumber} 
-                                    onChange={(e) => setBankDetails({...bankDetails, accountNumber: e.target.value})} 
-                                    className="h-9 text-xs font-semibold focus-visible:ring-blue-500" 
-                                />
-                            </div>
-                            <div>
-                                <Label className="text-[10px] text-gray-400 uppercase ml-1">IBAN</Label>
-                                <Input 
-                                    placeholder="e.g. KW81NBOK0000000000001234560101" 
-                                    value={bankDetails.iban} 
-                                    onChange={(e) => setBankDetails({...bankDetails, iban: e.target.value})} 
-                                    className="h-9 text-xs font-semibold tracking-wider focus-visible:ring-blue-500" 
-                                />
-                            </div>
-                            <div>
-                                <Label className="text-[10px] text-gray-400 uppercase ml-1">SWIFT / BIC (Optional)</Label>
-                                <Input 
-                                    placeholder="e.g. NBOKKWKW" 
-                                    value={bankDetails.swiftCode} 
-                                    onChange={(e) => setBankDetails({...bankDetails, swiftCode: e.target.value})} 
-                                    className="h-9 text-xs font-semibold focus-visible:ring-blue-500" 
-                                />
-                            </div>
-                            <div>
-                                <Label className="text-[10px] text-gray-400 uppercase ml-1">Transfer Instructions</Label>
-                                <Input 
-                                    placeholder="e.g. Send receipt on WhatsApp" 
-                                    value={bankDetails.notes} 
-                                    onChange={(e) => setBankDetails({...bankDetails, notes: e.target.value})} 
-                                    className="h-9 text-xs italic text-gray-500 focus-visible:ring-blue-500" 
-                                />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Meta */}
-                    <div className="bg-white rounded-xl border p-6 shadow-sm space-y-4">
-                        <Label className="text-xs font-bold text-gray-500 uppercase tracking-widest block font-sans">Payment Details</Label>
-                        <div className="grid grid-cols-2 gap-3">
-                            <div>
-                                <Label className="text-[10px] text-gray-400 uppercase ml-1">Status</Label>
-                                <Input 
-                                    value={meta.status} 
-                                    onChange={(e) => setMeta({...meta, status: e.target.value})} 
-                                    className="h-9 text-xs font-semibold" 
-                                    placeholder="e.g. Paid, Unpaid"
-                                />
-                                <div className="flex gap-1 mt-1.5 text-[9px] flex-wrap">
-                                    <span onClick={()=>setMeta({...meta, status: 'Paid'})} className="px-1.5 py-0.5 bg-green-50 text-green-600 rounded cursor-pointer hover:bg-green-100 font-bold uppercase tracking-wider">Paid</span>
-                                    <span onClick={()=>setMeta({...meta, status: 'Unpaid'})} className="px-1.5 py-0.5 bg-red-50 text-red-600 rounded cursor-pointer hover:bg-red-100 font-bold uppercase tracking-wider">Unpaid</span>
-                                    <span onClick={()=>setMeta({...meta, status: 'Pending'})} className="px-1.5 py-0.5 bg-yellow-50 text-yellow-600 rounded cursor-pointer hover:bg-yellow-100 font-bold uppercase tracking-wider">Pending</span>
-                                </div>
-                            </div>
-                            <div>
-                                <Label className="text-[10px] text-gray-400 uppercase ml-1">Method</Label>
-                                <Input 
-                                    value={meta.paymentMethod} 
-                                    onChange={(e) => setMeta({...meta, paymentMethod: e.target.value})} 
-                                    className="h-9 text-xs font-semibold" 
-                                    placeholder="e.g. Cash, Card"
-                                />
-                                <div className="flex gap-1 mt-1.5 flex-wrap text-[9px]">
-                                    <span onClick={()=>setMeta({...meta, paymentMethod: 'Cash to Driver'})} className="px-1.5 py-0.5 bg-gray-100 text-gray-600 rounded cursor-pointer hover:bg-gray-200 font-bold uppercase tracking-wider">Cash</span>
-                                    <span onClick={()=>setMeta({...meta, paymentMethod: 'Online Payment'})} className="px-1.5 py-0.5 bg-gray-100 text-gray-600 rounded cursor-pointer hover:bg-gray-200 font-bold uppercase tracking-wider">Online</span>
-                                    <span onClick={()=>{
-                                        setMeta({...meta, paymentMethod: 'Bank Transfer'});
-                                        setBankDetails(prev => ({...prev, showOnDocument: true}));
-                                    }} className="px-1.5 py-0.5 bg-blue-50 text-blue-600 rounded cursor-pointer hover:bg-blue-100 font-bold uppercase tracking-wider">Bank Transfer</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-3 pt-2">
-                            <div>
-                                <Label className="text-[10px] text-gray-400 uppercase ml-1">Ref ID</Label>
-                                <Input value={meta.number} onChange={(e) => setMeta({...meta, number: e.target.value})} className="h-9 text-xs" />
-                            </div>
-                            <div>
-                                <Label className="text-[10px] text-gray-400 uppercase ml-1">Date</Label>
-                                <Input type="date" value={meta.date} onChange={(e) => setMeta({...meta, date: e.target.value})} className="h-9 text-xs" />
+                                <Label className="text-[10px] text-gray-400 uppercase">Email</Label>
+                                <Input value={profile.email} onChange={e => setProfile({...profile, email: e.target.value})} className="h-9 text-xs" />
                             </div>
                         </div>
                         <div>
-                            <Label className="text-[10px] text-gray-400 uppercase ml-1 block mt-2">Footer Notes</Label>
-                            <Textarea value={meta.notes} onChange={(e) => setMeta({...meta, notes: e.target.value})} className="text-xs italic min-h-[60px]" />
+                            <Label className="text-[10px] text-gray-400 uppercase">Address</Label>
+                            <Input value={profile.address} onChange={e => setProfile({...profile, address: e.target.value})} className="h-9 text-xs" />
                         </div>
-                    </div>
+                        <div>
+                            <Label className="text-[10px] text-gray-400 uppercase">Website</Label>
+                            <Input value={profile.website} onChange={e => setProfile({...profile, website: e.target.value})} className="h-9 text-xs" />
+                        </div>
+                    </Section>
+
+                    {/* Client */}
+                    <Section id="client" title="Client Details">
+                        <div>
+                            <Label className="text-[10px] text-gray-400 uppercase">Client Name *</Label>
+                            <Input placeholder="Full name / Company" value={recipient.name} onChange={e => setRecipient({...recipient, name: e.target.value})} className="h-9 font-bold" />
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                            <div>
+                                <Label className="text-[10px] text-gray-400 uppercase">Email</Label>
+                                <Input type="email" placeholder="client@email.com" value={recipient.email} onChange={e => setRecipient({...recipient, email: e.target.value})} className="h-9 text-xs" />
+                            </div>
+                            <div>
+                                <Label className="text-[10px] text-gray-400 uppercase">Phone</Label>
+                                <Input placeholder="+965 XXXX XXXX" value={recipient.phone} onChange={e => setRecipient({...recipient, phone: e.target.value})} className="h-9 text-xs" />
+                            </div>
+                        </div>
+                        <div>
+                            <Label className="text-[10px] text-gray-400 uppercase">Address / Notes</Label>
+                            <Textarea placeholder="Client address or any additional info..." value={recipient.details} onChange={e => setRecipient({...recipient, details: e.target.value})} className="text-xs min-h-[60px]" />
+                        </div>
+                    </Section>
+
+                    {/* Trip Details */}
+                    <Section id="trip" title="Trip Details">
+                        <label className="flex items-center gap-2 text-xs font-bold text-gray-500 cursor-pointer mb-1">
+                            <input type="checkbox" checked={trip.showOnDoc} onChange={e => setTrip({...trip, showOnDoc: e.target.checked})} className="rounded" />
+                            Show trip info on document
+                        </label>
+                        <div>
+                            <Label className="text-[10px] text-gray-400 uppercase">Pickup Location</Label>
+                            <Input placeholder="e.g. Kuwait International Airport" value={trip.pickup} onChange={e => setTrip({...trip, pickup: e.target.value})} className="h-9 text-xs" />
+                        </div>
+                        <div>
+                            <Label className="text-[10px] text-gray-400 uppercase">Destination</Label>
+                            <Input placeholder="e.g. Salmiya, Kuwait City" value={trip.destination} onChange={e => setTrip({...trip, destination: e.target.value})} className="h-9 text-xs" />
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                            <div>
+                                <Label className="text-[10px] text-gray-400 uppercase">Date</Label>
+                                <Input type="date" value={trip.date} onChange={e => setTrip({...trip, date: e.target.value})} className="h-9 text-xs" />
+                            </div>
+                            <div>
+                                <Label className="text-[10px] text-gray-400 uppercase">Time</Label>
+                                <Input type="time" value={trip.time} onChange={e => setTrip({...trip, time: e.target.value})} className="h-9 text-xs" />
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                            <div>
+                                <Label className="text-[10px] text-gray-400 uppercase">Passengers</Label>
+                                <Input type="number" min={1} placeholder="1" value={trip.passengers} onChange={e => setTrip({...trip, passengers: e.target.value})} className="h-9 text-xs" />
+                            </div>
+                            <div>
+                                <Label className="text-[10px] text-gray-400 uppercase">Vehicle</Label>
+                                <Input placeholder="e.g. Camry" value={trip.vehicle} onChange={e => setTrip({...trip, vehicle: e.target.value})} className="h-9 text-xs" />
+                            </div>
+                        </div>
+                        <div className="flex flex-wrap gap-1">
+                            {VEHICLES.map(v => (
+                                <span key={v} onClick={() => setTrip({...trip, vehicle: v})} className="text-[9px] px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded cursor-pointer font-bold">{v}</span>
+                            ))}
+                        </div>
+                    </Section>
+
+                    {/* Items (not for letterhead) */}
+                    {docType !== 'letterhead' && (
+                        <Section id="items" title="Line Items">
+                            <div className="space-y-3">
+                                {items.map((item, idx) => (
+                                    <div key={item.id} className="border border-gray-100 rounded-lg p-3 space-y-2 bg-gray-50">
+                                        <div className="flex gap-2">
+                                            <Input
+                                                placeholder={`Item ${idx + 1} description`}
+                                                value={item.description}
+                                                onChange={e => setItems(prev => prev.map(i => i.id === item.id ? {...i, description: e.target.value} : i))}
+                                                className="h-8 text-xs flex-1"
+                                            />
+                                            <Button size="icon" variant="ghost" onClick={() => items.length > 1 && setItems(prev => prev.filter(i => i.id !== item.id))} className="h-8 w-8 text-gray-300 hover:text-red-500 shrink-0">
+                                                <Trash2 className="w-3.5 h-3.5" />
+                                            </Button>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-2">
+                                            <div>
+                                                <Label className="text-[9px] text-gray-400 uppercase">Qty</Label>
+                                                <Input type="number" min={1} value={item.quantity} onChange={e => setItems(prev => prev.map(i => i.id === item.id ? {...i, quantity: parseFloat(e.target.value)||0} : i))} className="h-8 text-xs text-center" />
+                                            </div>
+                                            <div>
+                                                <Label className="text-[9px] text-gray-400 uppercase">Price ({meta.currency})</Label>
+                                                <Input type="number" min={0} value={item.price} onChange={e => setItems(prev => prev.map(i => i.id === item.id ? {...i, price: parseFloat(e.target.value)||0} : i))} className="h-8 text-xs text-right" />
+                                            </div>
+                                        </div>
+                                        <p className="text-[10px] text-right text-gray-500 font-bold">Subtotal: {fmt(item.quantity * item.price)}</p>
+                                    </div>
+                                ))}
+                            </div>
+                            <Button size="sm" variant="outline" onClick={() => setItems(prev => [...prev, { id: Date.now().toString(), description: '', quantity: 1, price: 0 }])} className="w-full h-8 text-xs gap-1.5 border-dashed border-gray-300">
+                                <Plus className="w-3.5 h-3.5" /> Add Item
+                            </Button>
+
+                            {/* Currency */}
+                            <div className="pt-2 border-t border-gray-100">
+                                <Label className="text-[10px] text-gray-400 uppercase">Currency</Label>
+                                <div className="flex flex-wrap gap-1 mt-1">
+                                    {CURRENCIES.map(c => (
+                                        <button key={c} onClick={() => setMeta(m => ({...m, currency: c}))} className={cn('text-[10px] px-2.5 py-1 rounded font-black uppercase transition-all', meta.currency === c ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200')}>{c}</button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Discount */}
+                            <div className="pt-2 border-t border-gray-100">
+                                <Label className="text-[10px] text-gray-400 uppercase">Discount</Label>
+                                <div className="flex gap-2 mt-1">
+                                    <button onClick={() => setMeta(m => ({...m, discountType: 'fixed'}))} className={cn('text-[10px] px-2.5 py-1 rounded font-bold border transition-all', meta.discountType === 'fixed' ? 'bg-gray-900 text-white border-gray-900' : 'border-gray-200 text-gray-500')}>Fixed {meta.currency}</button>
+                                    <button onClick={() => setMeta(m => ({...m, discountType: 'percent'}))} className={cn('text-[10px] px-2.5 py-1 rounded font-bold border transition-all', meta.discountType === 'percent' ? 'bg-gray-900 text-white border-gray-900' : 'border-gray-200 text-gray-500')}>Percent %</button>
+                                    <Input type="number" min={0} value={meta.discountValue || ''} placeholder="0" onChange={e => setMeta(m => ({...m, discountValue: parseFloat(e.target.value)||0}))} className="h-8 text-xs flex-1" />
+                                </div>
+                            </div>
+
+                            {/* Tax */}
+                            <div className="pt-2 border-t border-gray-100">
+                                <label className="flex items-center gap-2 text-xs font-bold text-gray-600 cursor-pointer">
+                                    <input type="checkbox" checked={meta.taxShow} onChange={e => setMeta(m => ({...m, taxShow: e.target.checked}))} className="rounded" />
+                                    Add Tax / VAT
+                                </label>
+                                {meta.taxShow && (
+                                    <div className="flex gap-2 mt-2">
+                                        <Input placeholder="VAT" value={meta.taxLabel} onChange={e => setMeta(m => ({...m, taxLabel: e.target.value}))} className="h-8 text-xs w-20" />
+                                        <Input type="number" min={0} max={100} value={meta.taxRate} onChange={e => setMeta(m => ({...m, taxRate: parseFloat(e.target.value)||0}))} className="h-8 text-xs w-20 text-center" />
+                                        <span className="text-xs text-gray-400 self-center">%</span>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Totals preview */}
+                            <div className="bg-gray-900 text-white rounded-lg p-3 space-y-1.5 text-xs mt-2">
+                                <div className="flex justify-between">
+                                    <span className="text-gray-400">Subtotal</span>
+                                    <span className="font-bold">{fmt(subtotal)}</span>
+                                </div>
+                                {discountAmt > 0 && (
+                                    <div className="flex justify-between text-red-400">
+                                        <span>Discount {meta.discountType === 'percent' ? `(${meta.discountValue}%)` : ''}</span>
+                                        <span>-{fmt(discountAmt)}</span>
+                                    </div>
+                                )}
+                                {meta.taxShow && (
+                                    <div className="flex justify-between text-blue-400">
+                                        <span>{meta.taxLabel} ({meta.taxRate}%)</span>
+                                        <span>+{fmt(taxAmt)}</span>
+                                    </div>
+                                )}
+                                <div className="flex justify-between border-t border-neutral-700 pt-1.5 font-black text-sm">
+                                    <span>Total</span>
+                                    <span className="text-green-400">{fmt(total)}</span>
+                                </div>
+                            </div>
+                        </Section>
+                    )}
+
+                    {/* Letter body (letterhead only) */}
+                    {docType === 'letterhead' && (
+                        <Section id="letter" title="Letter Content">
+                            <div>
+                                <Label className="text-[10px] text-gray-400 uppercase">Subject</Label>
+                                <Input value={meta.subject} onChange={e => setMeta(m => ({...m, subject: e.target.value}))} className="h-9 font-bold text-sm" />
+                            </div>
+                            <div>
+                                <Label className="text-[10px] text-gray-400 uppercase">Body</Label>
+                                <Textarea value={meta.letterBody} onChange={e => setMeta(m => ({...m, letterBody: e.target.value}))} className="text-sm min-h-[180px]" />
+                            </div>
+                        </Section>
+                    )}
+
+                    {/* Payment & Dates */}
+                    <Section id="payment" title="Payment & Dates">
+                        <div className="grid grid-cols-2 gap-2">
+                            <div>
+                                <Label className="text-[10px] text-gray-400 uppercase">Reference</Label>
+                                <Input value={meta.ref} onChange={e => setMeta(m => ({...m, ref: e.target.value}))} className="h-9 text-xs font-mono" />
+                            </div>
+                            <div>
+                                <Label className="text-[10px] text-gray-400 uppercase">Doc Date</Label>
+                                <Input type="date" value={meta.date} onChange={e => setMeta(m => ({...m, date: e.target.value}))} className="h-9 text-xs" />
+                            </div>
+                            {docType === 'invoice' && (
+                                <div>
+                                    <Label className="text-[10px] text-gray-400 uppercase">Due Date</Label>
+                                    <Input type="date" value={meta.dueDate} onChange={e => setMeta(m => ({...m, dueDate: e.target.value}))} className="h-9 text-xs" />
+                                </div>
+                            )}
+                            {docType === 'quotation' && (
+                                <div>
+                                    <Label className="text-[10px] text-gray-400 uppercase">Valid Until</Label>
+                                    <Input type="date" value={meta.validUntil} onChange={e => setMeta(m => ({...m, validUntil: e.target.value}))} className="h-9 text-xs" />
+                                </div>
+                            )}
+                        </div>
+                        <div>
+                            <Label className="text-[10px] text-gray-400 uppercase">Payment Status</Label>
+                            <div className="flex gap-1 mt-1">
+                                {['Paid','Unpaid','Pending','Partial'].map(s => (
+                                    <button key={s} onClick={() => setMeta(m => ({...m, paymentStatus: s}))} className={cn('text-[10px] px-2.5 py-1 rounded font-black uppercase', meta.paymentStatus === s ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200')}>{s}</button>
+                                ))}
+                            </div>
+                        </div>
+                        <div>
+                            <Label className="text-[10px] text-gray-400 uppercase">Payment Method</Label>
+                            <div className="flex flex-wrap gap-1 mt-1">
+                                {['Cash to Driver','Bank Transfer','Online Payment','Card'].map(m => (
+                                    <button key={m} onClick={() => { setMeta(prev => ({...prev, paymentMethod: m})); if (m === 'Bank Transfer') setBank(b => ({...b, show: true})); }} className={cn('text-[10px] px-2.5 py-1 rounded font-bold whitespace-nowrap', meta.paymentMethod === m ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200')}>{m}</button>
+                                ))}
+                            </div>
+                        </div>
+                        <div>
+                            <Label className="text-[10px] text-gray-400 uppercase">Footer Notes</Label>
+                            <Textarea value={meta.notes} onChange={e => setMeta(m => ({...m, notes: e.target.value}))} className="text-xs min-h-[70px]" />
+                        </div>
+                    </Section>
+
+                    {/* Bank Details */}
+                    <Section id="bank" title="Bank Details">
+                        <label className="flex items-center gap-2 text-xs font-bold text-gray-600 cursor-pointer">
+                            <input type="checkbox" checked={bank.show} onChange={e => setBank(b => ({...b, show: e.target.checked}))} className="rounded" />
+                            Show bank info on document
+                        </label>
+                        <div>
+                            <Label className="text-[10px] text-gray-400 uppercase">Bank Name</Label>
+                            <Input value={bank.bankName} onChange={e => setBank(b => ({...b, bankName: e.target.value}))} className="h-9 text-xs" />
+                        </div>
+                        <div>
+                            <Label className="text-[10px] text-gray-400 uppercase">Account Holder</Label>
+                            <Input value={bank.accountName} onChange={e => setBank(b => ({...b, accountName: e.target.value}))} className="h-9 text-xs" />
+                        </div>
+                        <div>
+                            <Label className="text-[10px] text-gray-400 uppercase">Account Number</Label>
+                            <Input value={bank.accountNumber} onChange={e => setBank(b => ({...b, accountNumber: e.target.value}))} className="h-9 text-xs font-mono" />
+                        </div>
+                        <div>
+                            <Label className="text-[10px] text-gray-400 uppercase">IBAN</Label>
+                            <Input value={bank.iban} onChange={e => setBank(b => ({...b, iban: e.target.value}))} className="h-9 text-xs font-mono tracking-wider" />
+                        </div>
+                        <div>
+                            <Label className="text-[10px] text-gray-400 uppercase">SWIFT / BIC</Label>
+                            <Input value={bank.swift} onChange={e => setBank(b => ({...b, swift: e.target.value}))} className="h-9 text-xs font-mono" />
+                        </div>
+                        <div>
+                            <Label className="text-[10px] text-gray-400 uppercase">Transfer Instructions</Label>
+                            <Input value={bank.transferNote} onChange={e => setBank(b => ({...b, transferNote: e.target.value}))} className="h-9 text-xs italic" />
+                        </div>
+                    </Section>
+
+                    <Button variant="ghost" size="sm" onClick={clearAll} className="w-full h-8 text-xs text-gray-400 hover:text-red-500 gap-1.5">
+                        <RotateCcw className="w-3 h-3" /> Clear / Reset
+                    </Button>
                 </div>
 
-                <div className="flex-1 flex justify-center">
-                    <div id="printable-area" className="w-full max-w-[210mm] h-[296mm] overflow-hidden bg-white shadow-xl border border-gray-100 print:shadow-none print:border-none print:m-0">
-                        <div className="h-full flex flex-col p-12 md:p-16 relative font-sans text-gray-900 justify-between overflow-hidden">
-                            
-                            {/* Company Header */}
-                            <div className="flex justify-between items-start mb-12 border-b-2 border-gray-100 pb-8">
-                                <div className="space-y-4">
-                                    <div className="h-14 w-auto relative">
-                                        {profile.logoUrl && <img src={profile.logoUrl} alt="Logo" className="h-full object-contain" />}
-                                    </div>
-                                    <div className="space-y-0.5">
-                                        <h2 className="text-lg font-bold text-gray-900 uppercase tracking-tight">{profile.name}</h2>
-                                        <div className="text-[11px] text-gray-500 space-y-0.5 max-w-[250px] leading-tight font-medium">
-                                            <p className="flex items-center gap-1.5"><MapPin className="w-2.5 h-2.5" /> {profile.address}</p>
-                                            <p className="flex items-center gap-1.5"><Phone className="w-2.5 h-2.5" /> {profile.phone}</p>
-                                            <p className="flex items-center gap-1.5"><Globe className="w-2.5 h-2.5" /> {profile.website}</p>
+                {/* ─── DOCUMENT PREVIEW ─── */}
+                <div className="flex-1 flex justify-center items-start">
+                    <div
+                        id="print-doc"
+                        className="w-full max-w-[794px] min-h-[1123px] bg-white shadow-2xl border border-gray-100 print:shadow-none print:border-none relative overflow-hidden"
+                        style={{ fontFamily: 'Arial, sans-serif' }}
+                    >
+                        {/* PAID / RECEIPT stamp */}
+                        {docType === 'receipt' && meta.paymentStatus === 'Paid' && (
+                            <div className="absolute top-16 right-12 rotate-[-18deg] border-4 border-green-500 text-green-500 px-6 py-2 text-4xl font-black uppercase tracking-widest opacity-20 pointer-events-none select-none z-10">
+                                PAID
+                            </div>
+                        )}
+
+                        <div className="p-12 md:p-16 flex flex-col min-h-[1123px]">
+
+                            {/* Header */}
+                            <div className="flex justify-between items-start pb-8 mb-8 border-b-2 border-gray-100">
+                                <div className="space-y-3">
+                                    {profile.logoUrl && (
+                                        <img src={profile.logoUrl} alt="Logo" className="h-12 object-contain" />
+                                    )}
+                                    <div>
+                                        <h2 className="text-base font-black text-gray-900 uppercase tracking-tight">{profile.name}</h2>
+                                        <div className="text-[11px] text-gray-500 space-y-0.5 mt-1">
+                                            <p className="flex items-center gap-1.5"><MapPin className="w-2.5 h-2.5 shrink-0" />{profile.address}</p>
+                                            <p className="flex items-center gap-1.5"><Phone className="w-2.5 h-2.5 shrink-0" />{profile.phone}</p>
+                                            <p className="flex items-center gap-1.5"><Mail className="w-2.5 h-2.5 shrink-0" />{profile.email}</p>
+                                            <p className="flex items-center gap-1.5"><Globe className="w-2.5 h-2.5 shrink-0" />{profile.website}</p>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="text-right space-y-1">
-                                    <h1 className="text-3xl font-black text-gray-100 uppercase tracking-[0.2em] leading-none mb-4">{mode}</h1>
-                                    <div className="flex gap-2 justify-end mb-4 antialiased">
-                                        <div className={`px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-widest ${
-                                            meta.status === 'Paid' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                                        }`}>
-                                            {meta.status}
-                                        </div>
-                                        <div className="px-2 py-0.5 rounded bg-blue-50 text-blue-700 text-[9px] font-black uppercase tracking-widest">
+                                <div className="text-right">
+                                    <h1 className="text-4xl font-black uppercase tracking-[0.15em] mb-3" style={{ color: DOC_META[docType].color, opacity: 0.12 }}>
+                                        {DOC_META[docType].label}
+                                    </h1>
+                                    <h1 className="text-2xl font-black uppercase tracking-[0.1em] -mt-9 mb-3" style={{ color: DOC_META[docType].color }}>
+                                        {DOC_META[docType].label}
+                                    </h1>
+                                    {/* Status badges */}
+                                    <div className="flex gap-1.5 justify-end mb-4 flex-wrap">
+                                        <span className={cn('px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-widest', meta.paymentStatus === 'Paid' ? 'bg-green-100 text-green-700' : meta.paymentStatus === 'Pending' || meta.paymentStatus === 'Partial' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700')}>
+                                            {meta.paymentStatus}
+                                        </span>
+                                        <span className="px-2 py-0.5 rounded bg-gray-100 text-gray-600 text-[9px] font-black uppercase tracking-widest">
                                             {meta.paymentMethod}
-                                        </div>
+                                        </span>
                                     </div>
-                                    <div className="text-xs space-y-0.5 pt-2">
-                                        <p className="font-bold text-gray-400 text-[10px] uppercase">Reference ID</p>
-                                        <p className="font-bold text-gray-900 text-sm">#{meta.number}</p>
-                                        <p className="font-bold text-gray-400 text-[10px] uppercase mt-4 block">Document Date</p>
-                                        <p className="font-bold text-gray-900">{new Date(meta.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })}</p>
+                                    <div className="text-xs space-y-1">
+                                        <div>
+                                            <p className="text-[9px] text-gray-400 uppercase font-bold">Reference</p>
+                                            <p className="font-black text-gray-900">#{meta.ref}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-[9px] text-gray-400 uppercase font-bold mt-2">Date</p>
+                                            <p className="font-bold text-gray-800">{meta.date ? new Date(meta.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }) : '—'}</p>
+                                        </div>
+                                        {docType === 'invoice' && meta.dueDate && (
+                                            <div>
+                                                <p className="text-[9px] text-red-400 uppercase font-bold mt-1">Due Date</p>
+                                                <p className="font-bold text-red-600">{new Date(meta.dueDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })}</p>
+                                            </div>
+                                        )}
+                                        {docType === 'quotation' && meta.validUntil && (
+                                            <div>
+                                                <p className="text-[9px] text-amber-500 uppercase font-bold mt-1">Valid Until</p>
+                                                <p className="font-bold text-amber-700">{new Date(meta.validUntil).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })}</p>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Vehicle Details (shown if enabled) */}
-                            {vehicle.showOnDocument && (
-                                <div className="mb-8 flex items-center gap-4 bg-gray-50/50 border border-gray-100 p-4 rounded-lg">
-                                    <div className="bg-white p-2.5 rounded-full shadow-sm">
-                                        <Car className="w-5 h-5 text-gray-700" />
+                            {/* Recipient */}
+                            <div className="mb-8">
+                                <p className="text-[9px] font-black text-gray-400 uppercase tracking-[0.2em] mb-2">
+                                    {docType === 'letterhead' ? 'To' : 'Bill To'}
+                                </p>
+                                <div className="bg-gray-50 border-l-4 rounded-r-lg p-5" style={{ borderColor: DOC_META[docType].color }}>
+                                    <p className="font-black text-lg text-gray-900">{recipient.name || 'CLIENT NAME'}</p>
+                                    {recipient.phone && <p className="text-xs text-gray-500 mt-0.5 flex items-center gap-1"><Phone className="w-3 h-3" />{recipient.phone}</p>}
+                                    {recipient.email && <p className="text-xs text-gray-500 mt-0.5 flex items-center gap-1"><Mail className="w-3 h-3" />{recipient.email}</p>}
+                                    {recipient.details && <pre className="text-xs text-gray-500 mt-1 font-sans whitespace-pre-wrap">{recipient.details}</pre>}
+                                </div>
+                            </div>
+
+                            {/* Trip Details */}
+                            {trip.showOnDoc && (trip.pickup || trip.destination || trip.date || trip.vehicle) && (
+                                <div className="mb-8 border border-gray-100 rounded-xl overflow-hidden">
+                                    <div className="px-5 py-2.5 text-[9px] font-black text-gray-400 uppercase tracking-[0.2em] bg-gray-50 border-b border-gray-100">
+                                        Trip Details
                                     </div>
-                                    <div>
-                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Confirmed Vehicle</p>
-                                        <p className="font-bold text-gray-900">{vehicle.name || 'NOT SPECIFIED'}</p>
+                                    <div className="grid grid-cols-2 gap-4 p-5">
+                                        {trip.pickup && (
+                                            <div>
+                                                <p className="text-[9px] text-gray-400 uppercase font-bold mb-1">Pickup</p>
+                                                <p className="text-xs font-bold text-gray-800 flex items-center gap-1.5">
+                                                    <span className="w-2 h-2 rounded-full bg-green-500 shrink-0 inline-block" />{trip.pickup}
+                                                </p>
+                                            </div>
+                                        )}
+                                        {trip.destination && (
+                                            <div>
+                                                <p className="text-[9px] text-gray-400 uppercase font-bold mb-1">Destination</p>
+                                                <p className="text-xs font-bold text-gray-800 flex items-center gap-1.5">
+                                                    <span className="w-2 h-2 rounded-full bg-red-500 shrink-0 inline-block" />{trip.destination}
+                                                </p>
+                                            </div>
+                                        )}
+                                        {trip.date && (
+                                            <div>
+                                                <p className="text-[9px] text-gray-400 uppercase font-bold mb-1">Date & Time</p>
+                                                <p className="text-xs font-bold text-gray-800">
+                                                    {new Date(trip.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })}
+                                                    {trip.time && ` @ ${trip.time}`}
+                                                </p>
+                                            </div>
+                                        )}
+                                        {(trip.vehicle || trip.passengers) && (
+                                            <div>
+                                                <p className="text-[9px] text-gray-400 uppercase font-bold mb-1">Vehicle / Pax</p>
+                                                <p className="text-xs font-bold text-gray-800 flex items-center gap-2">
+                                                    {trip.vehicle && <span className="flex items-center gap-1"><Car className="w-3 h-3 text-gray-400" />{trip.vehicle}</span>}
+                                                    {trip.passengers && <span className="flex items-center gap-1"><Users className="w-3 h-3 text-gray-400" />{trip.passengers} pax</span>}
+                                                </p>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             )}
 
-                            {/* Recipient */}
-                            <div className="mb-12">
-                                <p className="text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-2">Recipient Info</p>
-                                <div className="bg-gray-50 border-l-2 border-gray-200 p-6 rounded-r-lg">
-                                    <p className="font-bold text-lg text-gray-900">{recipient.name || 'CLIENT NAME'}</p>
-                                    <pre className="text-xs font-semibold text-gray-500 leading-relaxed font-sans mt-2">
-                                        {recipient.details || 'Recipient details not specified.'}
-                                    </pre>
+                            {/* Main content */}
+                            {docType === 'letterhead' ? (
+                                <div className="flex-1 space-y-5">
+                                    <div>
+                                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">Subject</p>
+                                        <h3 className="font-bold text-gray-900 text-sm border-b border-gray-100 pb-2">{meta.subject}</h3>
+                                    </div>
+                                    <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{meta.letterBody}</p>
                                 </div>
-                            </div>
-
-                            {/* Main Table or Body */}
-                            {mode === 'invoice' ? (
+                            ) : (
                                 <div className="flex-1">
-                                    <div className="border rounded-lg overflow-hidden mb-10 shadow-sm border-gray-100">
+                                    {/* Items Table */}
+                                    <div className="border border-gray-100 rounded-xl overflow-hidden mb-6 shadow-sm">
                                         <table className="w-full text-left">
-                                            <thead className="bg-gray-50/50 border-b border-gray-100">
-                                                <tr>
-                                                    <th className="px-6 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Description</th>
-                                                    <th className="px-6 py-4 text-center text-[10px] font-bold text-gray-400 uppercase tracking-widest w-24">QTY</th>
-                                                    <th className="px-6 py-4 text-right text-[10px] font-bold text-gray-400 uppercase tracking-widest w-40">Amount ({meta.currency})</th>
+                                            <thead>
+                                                <tr className="bg-gray-50 border-b border-gray-100">
+                                                    <th className="px-5 py-3 text-[9px] font-black text-gray-400 uppercase tracking-widest">Description</th>
+                                                    <th className="px-4 py-3 text-center text-[9px] font-black text-gray-400 uppercase tracking-widest w-16">Qty</th>
+                                                    <th className="px-4 py-3 text-right text-[9px] font-black text-gray-400 uppercase tracking-widest w-32">Rate</th>
+                                                    <th className="px-5 py-3 text-right text-[9px] font-black text-gray-400 uppercase tracking-widest w-36">Amount</th>
                                                 </tr>
                                             </thead>
-                                            <tbody className="divide-y divide-gray-100 text-[13px]">
-                                                {items.map((item) => (
+                                            <tbody className="divide-y divide-gray-50">
+                                                {items.map(item => (
                                                     <tr key={item.id}>
-                                                        <td className="px-8 py-6 font-black text-gray-900 uppercase tracking-tight">{item.description || 'SERVICE DESCRIPTION'}</td>
-                                                        <td className="px-8 py-6 text-center font-bold text-gray-500">{item.quantity}</td>
-                                                        <td className="px-8 py-6 text-right font-black text-gray-900">{(item.quantity * item.price).toFixed(2)}</td>
+                                                        <td className="px-5 py-4 text-sm font-bold text-gray-900">{item.description || 'Service Description'}</td>
+                                                        <td className="px-4 py-4 text-center text-sm text-gray-600">{item.quantity}</td>
+                                                        <td className="px-4 py-4 text-right text-sm text-gray-600">{fmt(item.price)}</td>
+                                                        <td className="px-5 py-4 text-right text-sm font-black text-gray-900">{fmt(item.quantity * item.price)}</td>
                                                     </tr>
                                                 ))}
                                             </tbody>
                                         </table>
-                                        <div className="bg-gray-50/50 border-t border-gray-100 p-6 flex flex-col items-end space-y-2">
-                                            <div className="flex justify-between w-48 text-[10px] font-bold text-gray-400 uppercase">
-                                                <span>Subtotal</span>
-                                                <span className="text-gray-900">{subtotal.toLocaleString()}</span>
-                                            </div>
-                                            <div className="flex justify-between w-48 pt-4 items-center">
-                                                <span className="text-xs font-bold text-gray-900 uppercase">Total Payable</span>
-                                                <span className="text-2xl font-black text-gray-900 underline decoration-blue-500 underline-offset-8">
-                                                    {total.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                                                </span>
+                                        {/* Totals */}
+                                        <div className="border-t border-gray-100 bg-gray-50 px-5 py-4">
+                                            <div className="flex flex-col items-end gap-2">
+                                                <div className="flex justify-between w-56 text-xs">
+                                                    <span className="text-gray-500">Subtotal</span>
+                                                    <span className="font-bold text-gray-900">{fmt(subtotal)}</span>
+                                                </div>
+                                                {discountAmt > 0 && (
+                                                    <div className="flex justify-between w-56 text-xs">
+                                                        <span className="text-red-500">Discount {meta.discountType === 'percent' ? `(${meta.discountValue}%)` : ''}</span>
+                                                        <span className="font-bold text-red-600">-{fmt(discountAmt)}</span>
+                                                    </div>
+                                                )}
+                                                {meta.taxShow && (
+                                                    <div className="flex justify-between w-56 text-xs">
+                                                        <span className="text-blue-500">{meta.taxLabel} ({meta.taxRate}%)</span>
+                                                        <span className="font-bold text-blue-700">+{fmt(taxAmt)}</span>
+                                                    </div>
+                                                )}
+                                                <div className="flex justify-between w-56 pt-2 border-t border-gray-200">
+                                                    <span className="text-sm font-black text-gray-900 uppercase">Total</span>
+                                                    <span className="text-xl font-black text-gray-900">{fmt(total)}</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    {/* Bank Transfer Details on Document */}
-                                    {bankDetails.showOnDocument && (
-                                        <div className="border border-blue-100 bg-blue-50/10 p-5 rounded-lg mb-6">
-                                            <p className="text-[10px] font-black text-blue-600 uppercase tracking-[0.25em] mb-3">Bank Transfer Details</p>
+                                    {/* Bank Details */}
+                                    {bank.show && (
+                                        <div className="border border-blue-100 bg-blue-50/30 p-5 rounded-xl mb-6">
+                                            <p className="text-[9px] font-black text-blue-600 uppercase tracking-[0.25em] mb-3">Bank Transfer Details</p>
                                             <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-xs">
-                                                {bankDetails.bankName && (
-                                                    <div className="flex justify-between border-b border-gray-100 pb-1.5">
-                                                        <span className="text-[10px] text-gray-400 font-medium">Bank Name</span>
-                                                        <span className="font-bold text-gray-900">{bankDetails.bankName}</span>
+                                                {[
+                                                    { label: 'Bank Name', val: bank.bankName },
+                                                    { label: 'Account Name', val: bank.accountName },
+                                                    { label: 'Account Number', val: bank.accountNumber },
+                                                    { label: 'SWIFT / BIC', val: bank.swift },
+                                                ].map(r => r.val ? (
+                                                    <div key={r.label} className="flex justify-between border-b border-blue-100 pb-1.5">
+                                                        <span className="text-gray-400 text-[10px]">{r.label}</span>
+                                                        <span className="font-bold text-gray-900">{r.val}</span>
+                                                    </div>
+                                                ) : null)}
+                                                {bank.iban && (
+                                                    <div className="col-span-2 flex justify-between border-b border-blue-100 pb-1.5">
+                                                        <span className="text-gray-400 text-[10px]">IBAN</span>
+                                                        <span className="font-black text-blue-700 tracking-wider">{bank.iban}</span>
                                                     </div>
                                                 )}
-                                                {bankDetails.accountName && (
-                                                    <div className="flex justify-between border-b border-gray-100 pb-1.5">
-                                                        <span className="text-[10px] text-gray-400 font-medium">Account Name</span>
-                                                        <span className="font-semibold text-gray-800">{bankDetails.accountName}</span>
-                                                    </div>
-                                                )}
-                                                {bankDetails.accountNumber && (
-                                                    <div className="flex justify-between border-b border-gray-100 pb-1.5">
-                                                        <span className="text-[10px] text-gray-400 font-medium">Account No.</span>
-                                                        <span className="font-semibold text-gray-800 break-all">{bankDetails.accountNumber}</span>
-                                                    </div>
-                                                )}
-                                                {bankDetails.iban && (
-                                                    <div className="flex justify-between border-b border-gray-100 pb-1.5 col-span-2">
-                                                        <span className="text-[10px] text-gray-400 font-medium">IBAN</span>
-                                                        <span className="font-bold text-blue-700 tracking-wider break-all">{bankDetails.iban}</span>
-                                                    </div>
-                                                )}
-                                                {bankDetails.swiftCode && (
-                                                    <div className="flex justify-between border-b border-gray-100 pb-1.5">
-                                                        <span className="text-[10px] text-gray-400 font-medium">SWIFT / BIC</span>
-                                                        <span className="font-semibold text-gray-800">{bankDetails.swiftCode}</span>
-                                                    </div>
-                                                )}
-                                                {bankDetails.notes && (
-                                                    <div className="col-span-2 text-[9px] text-gray-500 italic mt-1 leading-snug">
-                                                        * {bankDetails.notes}
-                                                    </div>
+                                                {bank.transferNote && (
+                                                    <p className="col-span-2 text-[9px] text-gray-500 italic mt-1">* {bank.transferNote}</p>
                                                 )}
                                             </div>
                                         </div>
                                     )}
-                                </div>
-                            ) : (
-                                <div className="flex-1 space-y-6">
-                                    <h3 className="font-bold text-gray-900 uppercase text-sm border-b pb-2 inline-block">Sub: {meta.subject}</h3>
-                                    <p className="text-sm font-semibold text-gray-700 leading-relaxed whitespace-pre-wrap">
-                                        {meta.letterBody}
-                                    </p>
                                 </div>
                             )}
 
                             {/* Footer */}
-                            <div className="mt-auto pt-10 border-t-2 border-gray-100 flex justify-between items-end gap-12">
-                                <div className="max-w-md">
-                                    <p className="text-[10px] font-black text-gray-300 uppercase mb-4 tracking-[0.2em]">Important Notes</p>
-                                    {meta.paymentMethod === 'Cash to Driver' && (
-                                        <p className="text-[10px] font-black text-gray-900 uppercase italic mb-2 tracking-tight">
-                                            Hand over the payment to the driver upon journey completion.
-                                        </p>
-                                    )}
-                                    <p className="text-xs font-semibold text-gray-500 italic leading-relaxed whitespace-pre-wrap opacity-80">
-                                        {meta.notes}
-                                    </p>
-                                </div>
-                                <div className="text-right min-w-[200px]">
-                                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] mb-4">Authorized Partners</p>
-                                    <div className="flex items-end justify-end gap-6 h-12">
-                                        <div className="text-center">
-                                            <img src="/zumer-signature.png" alt="Zumer" className="h-full w-auto object-contain select-none" />
-                                            <p className="text-[7px] font-bold text-gray-300 mt-1 uppercase italic tracking-widest">Zumer</p>
-                                        </div>
-                                        <div className="text-center">
-                                            <img src="/ismail-signature.png" alt="Ismail" className="h-full w-auto object-contain select-none" />
-                                            <p className="text-[7px] font-bold text-gray-300 mt-1 uppercase italic tracking-widest">Ismail</p>
+                            <div className="mt-auto pt-8 border-t-2 border-gray-100">
+                                <div className="flex justify-between items-end gap-8">
+                                    <div className="flex-1">
+                                        {meta.notes && (
+                                            <>
+                                                <p className="text-[9px] font-black text-gray-300 uppercase tracking-[0.2em] mb-2">Notes</p>
+                                                <p className="text-[10px] text-gray-500 italic leading-relaxed whitespace-pre-wrap">{meta.notes}</p>
+                                            </>
+                                        )}
+                                    </div>
+                                    <div className="text-right shrink-0">
+                                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-[0.3em] mb-4">Authorized By</p>
+                                        <div className="flex items-end justify-end gap-6 h-12">
+                                            <div className="text-center">
+                                                <img src="/ismail-signature.png" alt="Ismail" className="h-full w-auto object-contain select-none" />
+                                                <p className="text-[7px] font-bold text-gray-300 mt-1 uppercase tracking-widest">Ismail</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                                <p className="text-[9px] text-gray-300 text-center mt-6 tracking-wider">{profile.name} · {profile.email} · {profile.website}</p>
                             </div>
-
                         </div>
                     </div>
                 </div>
-
             </div>
 
             <style jsx global>{`
                 @media print {
-                    html, body { 
-                        background: white !important; 
-                        margin: 0 !important; 
-                        padding: 0 !important;
-                    }
-                    #printable-area {
-                        width: 210mm !important;
-                        height: 296mm !important;
-                        background: white !important;
-                        box-shadow: none !important;
-                        border: none !important;
-                        margin: 0 auto !important;
-                        position: relative !important;
-                        page-break-after: avoid !important;
-                        page-break-before: avoid !important;
-                        page-break-inside: avoid !important;
-                        overflow: hidden !important;
-                    }
-                    * {
-                        page-break-inside: avoid !important;
-                    }
-                    * {
-                        -webkit-print-color-adjust: exact !important;
-                        print-color-adjust: exact !important;
-                    }
+                    html, body { background: white !important; margin: 0 !important; padding: 0 !important; }
+                    #print-doc { width: 210mm !important; min-height: 297mm !important; box-shadow: none !important; border: none !important; margin: 0 !important; }
+                    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
                 }
             `}</style>
         </div>
     );
 }
-
