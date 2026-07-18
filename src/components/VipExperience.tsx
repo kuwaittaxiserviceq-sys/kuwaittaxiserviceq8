@@ -1,4 +1,4 @@
-import { CalendarCheck, CarFront, Handshake, PlaneLanding } from "lucide-react";
+import { CalendarCheck, CarFront, CheckCircle2, Handshake, PlaneLanding } from "lucide-react";
 import Container from "./Container";
 
 const steps = [
@@ -12,16 +12,70 @@ export default function VipExperience() {
   return (
     <section className="bg-brand-black py-16 sm:py-20">
       <Container className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
-        <div className="relative order-2 flex h-72 items-center justify-center overflow-hidden rounded-3xl bg-gradient-to-br from-brand-green-dark via-brand-green to-emerald-700 sm:h-96 lg:order-1">
-          <div
-            className="absolute inset-0 opacity-10"
-            style={{
-              backgroundImage:
-                "radial-gradient(circle, #ffffff 1px, transparent 1px)",
-              backgroundSize: "24px 24px",
-            }}
-          />
-          <CarFront className="relative h-28 w-28 text-white/90" strokeWidth={1.1} />
+        <div className="order-2 flex items-center justify-center lg:order-1">
+          <div className="w-full max-w-sm rounded-3xl bg-white p-6 shadow-2xl shadow-black/50 sm:p-7">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-green text-white">
+                  <CarFront className="h-4 w-4" />
+                </span>
+                <span className="text-sm font-bold text-zinc-900">Kuwait Taxi</span>
+              </div>
+              <span className="flex items-center gap-1 rounded-full bg-brand-green-light px-3 py-1 text-xs font-semibold text-brand-green">
+                <CheckCircle2 className="h-3.5 w-3.5" />
+                Confirmed
+              </span>
+            </div>
+
+            <div className="mt-7 flex items-center gap-2">
+              <div className="flex flex-1 flex-col gap-1">
+                <span className="text-xs font-medium uppercase tracking-wide text-zinc-400">
+                  From
+                </span>
+                <span className="text-sm font-semibold text-zinc-900">
+                  Kuwait Int&apos;l Airport
+                </span>
+              </div>
+              <div className="flex flex-1 items-center gap-1.5 px-1">
+                <span className="h-px flex-1 border-t-2 border-dashed border-zinc-200" />
+                <CarFront className="h-4 w-4 shrink-0 text-brand-green" />
+                <span className="h-px flex-1 border-t-2 border-dashed border-zinc-200" />
+              </div>
+              <div className="flex flex-1 flex-col items-end gap-1 text-right">
+                <span className="text-xs font-medium uppercase tracking-wide text-zinc-400">
+                  To
+                </span>
+                <span className="text-sm font-semibold text-zinc-900">
+                  Your Address
+                </span>
+              </div>
+            </div>
+
+            <div className="relative my-7 -mx-6 sm:-mx-7">
+              <span className="absolute -left-3 top-1/2 h-6 w-6 -translate-y-1/2 rounded-full bg-brand-black" />
+              <span className="absolute -right-3 top-1/2 h-6 w-6 -translate-y-1/2 rounded-full bg-brand-black" />
+              <div className="mx-6 border-t-2 border-dashed border-zinc-200 sm:mx-7" />
+            </div>
+
+            <div className="grid grid-cols-2 gap-5">
+              <div className="flex flex-col gap-1">
+                <span className="text-xs text-zinc-400">Chauffeur</span>
+                <span className="text-sm font-semibold text-zinc-900">Licensed &amp; Vetted</span>
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-xs text-zinc-400">Vehicle</span>
+                <span className="text-sm font-semibold text-zinc-900">Sedan &middot; A/C</span>
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-xs text-zinc-400">Wait Time</span>
+                <span className="text-sm font-semibold text-zinc-900">Free 60 min</span>
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-xs text-zinc-400">Fare</span>
+                <span className="text-sm font-semibold text-brand-green">Fixed, No Surge</span>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="order-1 flex flex-col gap-8 lg:order-2">
