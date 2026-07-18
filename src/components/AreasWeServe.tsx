@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, MapPin } from "lucide-react";
 import Container from "./Container";
 import SectionHeading from "./SectionHeading";
+import { slugifyArea } from "@/lib/areas";
 
 const areas = [
   "Kuwait City",
@@ -28,18 +29,19 @@ export default function AreasWeServe() {
 
         <div className="flex w-full snap-x snap-mandatory gap-5 overflow-x-auto pb-4">
           {areas.map((area) => (
-            <div
+            <Link
               key={area}
-              className="flex w-56 shrink-0 snap-start flex-col overflow-hidden rounded-2xl ring-1 ring-black/5"
+              href={`/areas/${slugifyArea(area)}`}
+              className="group flex w-56 shrink-0 snap-start flex-col overflow-hidden rounded-2xl ring-1 ring-black/5 transition-shadow hover:shadow-lg"
             >
-              <div className="relative flex h-32 items-center justify-center bg-gradient-to-br from-brand-green-dark to-brand-green">
+              <div className="relative flex h-32 items-center justify-center bg-gradient-to-br from-brand-green-dark to-brand-green transition-transform group-hover:scale-105">
                 <MapPin className="h-10 w-10 text-white/90" strokeWidth={1.25} />
               </div>
               <div className="flex flex-col gap-1 bg-white p-4">
-                <h3 className="font-semibold text-zinc-900">{area}</h3>
+                <h3 className="font-semibold text-zinc-900 group-hover:text-brand-green">{area}</h3>
                 <span className="text-xs text-zinc-500">Daily transfers &amp; city rides</span>
               </div>
-            </div>
+            </Link>
           ))}
 
           <Link
