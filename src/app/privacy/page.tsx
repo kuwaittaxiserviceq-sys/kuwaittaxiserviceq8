@@ -41,7 +41,7 @@ const sections = [
   },
   {
     heading: "Contact Us",
-    body: "For any privacy questions or requests, contact us at kuwaittaxiserviceq@gmail.com or call +965 5520 5485.",
+    body: "For any privacy questions or requests, contact us at kuwaittaxiserviceq@gmail.com or call +965 9789 6907.",
   },
 ];
 

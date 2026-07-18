@@ -40,9 +40,9 @@ export default function Navbar() {
               <Mail className="h-3.5 w-3.5 text-brand-red" />
               kuwaittaxiserviceq@gmail.com
             </a>
-            <a href="tel:+96555205485" className="flex items-center gap-1.5 hover:text-white">
+            <a href="tel:+96597896907" className="flex items-center gap-1.5 hover:text-white">
               <Phone className="h-3.5 w-3.5 text-brand-red" />
-              5520 5485
+              9789 6907
             </a>
           </div>
           <div className="flex items-center gap-2">
@@ -89,7 +89,7 @@ export default function Navbar() {
               العربية
             </Link>
             <a
-              href="https://wa.me/96555205485"
+              href="https://wa.me/96597896907"
               className="hidden h-10 w-10 items-center justify-center rounded-full bg-zinc-100 text-zinc-700 transition-colors hover:bg-zinc-200 sm:flex"
               aria-label="WhatsApp"
             >
@@ -130,11 +130,11 @@ export default function Navbar() {
                 </Link>
               ))}
               <a
-                href="tel:+96555205485"
+                href="tel:+96597896907"
                 className="flex items-center gap-2 py-3 text-sm font-semibold text-brand-green"
               >
                 <Phone className="h-4 w-4" />
-                Call 5520 5485
+                Call 9789 6907
               </a>
               <Link
                 href="/reservation"

@@ -43,7 +43,7 @@ export function AirportHeroAr() {
         </p>
         <div className="flex flex-col gap-4 sm:flex-row">
           <a
-            href="https://wa.me/96555205485?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%AD%D8%AC%D8%B2%20%D8%AA%D8%A7%D9%83%D8%B3%D9%8A%20%D8%A7%D9%84%D9%85%D8%B7%D8%A7%D8%B1"
+            href="https://wa.me/96597896907?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%AD%D8%AC%D8%B2%20%D8%AA%D8%A7%D9%83%D8%B3%D9%8A%20%D8%A7%D9%84%D9%85%D8%B7%D8%A7%D8%B1"
             target="_blank"
             rel="noopener noreferrer"
             className="flex h-12 items-center justify-center rounded-full bg-brand-green px-8 text-base font-semibold text-white transition-colors hover:bg-emerald-600"
@@ -51,10 +51,10 @@ export function AirportHeroAr() {
             احجز عبر واتساب
           </a>
           <a
-            href="tel:+96555205485"
+            href="tel:+96597896907"
             className="flex h-12 items-center justify-center rounded-full border border-white/20 px-8 text-base font-semibold text-white transition-colors hover:bg-white/10"
           >
-            اتصل: <span dir="ltr">5520 5485</span>
+            اتصل: <span dir="ltr">9789 6907</span>
           </a>
         </div>
       </div>
@@ -223,7 +223,7 @@ const faqs = [
   {
     question: "كيف أحجز تاكسي من مطار الكويت؟",
     answer:
-      "احجز عبر واتساب أو اتصل على 55205485 مع رقم رحلتك ووجهتك، وستُؤكد أجرتك الثابتة فورًا.",
+      "احجز عبر واتساب أو اتصل على 97896907 مع رقم رحلتك ووجهتك، وستُؤكد أجرتك الثابتة فورًا.",
   },
   {
     question: "أين يستقبلني السائق في مطار الكويت الدولي؟",

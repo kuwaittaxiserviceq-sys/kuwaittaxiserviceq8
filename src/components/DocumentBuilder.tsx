@@ -321,7 +321,7 @@ export default function DocumentBuilder() {
       docType === "quotation" && `Valid until: ${secondDate}`,
       notes && `Note: ${notes}`,
       "",
-      "Kuwait Taxi Service — +965 5520 5485",
+      "Kuwait Taxi Service — +965 9789 6907",
     ].filter((l) => l !== false && l !== undefined && l !== null);
     const digits = customer.phone.replace(/\D/g, "");
     return `https://wa.me/${digits}?text=${encodeURIComponent(lines.join("\n"))}`;
@@ -600,7 +600,7 @@ export default function DocumentBuilder() {
                 </div>
               </div>
               <div className="max-w-[260px] text-right text-xs leading-5 text-emerald-100">
-                <div dir="ltr">+965 5520 5485</div>
+                <div dir="ltr">+965 9789 6907</div>
                 <div>kuwaittaxiserviceq@gmail.com</div>
                 <div>kuwaittaxiserviceq8.com</div>
                 <div>

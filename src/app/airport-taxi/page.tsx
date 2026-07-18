@@ -21,14 +21,14 @@ export const metadata: Metadata = {
   },
   title: "Kuwait Airport Taxi | 24/7 Airport Transfer at Fixed Fares (KWI)",
   description:
-    "Pre-book your Kuwait airport taxi — meet & greet inside arrivals, flight tracking, 60 minutes free waiting, and fixed fares to every area. 24/7 at Kuwait International Airport. Call 5520 5485.",
+    "Pre-book your Kuwait airport taxi — meet & greet inside arrivals, flight tracking, 60 minutes free waiting, and fixed fares to every area. 24/7 at Kuwait International Airport. Call 9789 6907.",
 };
 
 const airportFaqs = [
   {
     question: "How do I book a taxi from Kuwait Airport?",
     answer:
-      "Book online through our reservation page, by phone, or on WhatsApp at +965 5520 5485. Share your flight number and destination, and your fixed fare is confirmed instantly.",
+      "Book online through our reservation page, by phone, or on WhatsApp at +965 9789 6907. Share your flight number and destination, and your fixed fare is confirmed instantly.",
   },
   {
     question: "Where does the driver meet me at Kuwait International Airport?",

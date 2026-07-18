@@ -66,13 +66,13 @@ export default function Hero() {
           </div>
 
           <a
-            href="tel:+96555205485"
+            href="tel:+96597896907"
             className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-white transition-colors hover:border-emerald-400/30 hover:bg-white/10"
           >
             <Phone className="h-5 w-5 text-emerald-400" />
             <div className="text-sm">
               <div className="text-zinc-400">Call to book now</div>
-              <div className="font-semibold">5520 5485</div>
+              <div className="font-semibold">9789 6907</div>
             </div>
           </a>
         </div>

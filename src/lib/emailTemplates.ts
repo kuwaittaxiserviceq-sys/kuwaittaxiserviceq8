@@ -11,7 +11,7 @@ export function escapeHtml(s: string) {
 const CONTACT_FOOTER = `
   <p style="margin:24px 0 0;color:#71717a;font-size:13px;line-height:20px">
     Kuwait Taxi Service — 24/7 across Kuwait<br/>
-    Call / WhatsApp: <a href="https://wa.me/96555205485" style="color:#0a6b3d;font-weight:600">+965 5520 5485</a><br/>
+    Call / WhatsApp: <a href="https://wa.me/96597896907" style="color:#0a6b3d;font-weight:600">+965 9789 6907</a><br/>
     <a href="https://kuwaittaxiserviceq8.com" style="color:#0a6b3d">kuwaittaxiserviceq8.com</a>
   </p>`;
 
@@ -102,7 +102,7 @@ export function statusEmail(
           Your trip is complete — we hope you enjoyed the ride!<br/><br/>
           Next time you need an airport transfer, city ride, or a trip to
           Saudi Arabia, we're one message away, 24/7. Save our number:
-          <strong>+965 5520 5485</strong>.
+          <strong>+965 9789 6907</strong>.
         </p>`
       ),
     };

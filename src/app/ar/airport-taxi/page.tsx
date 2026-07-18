@@ -12,9 +12,9 @@ import FooterAr from "@/components/ar/FooterAr";
 import { breadcrumbSchema, serviceSchema, JsonLd } from "@/lib/schema";
 
 export const metadata: Metadata = {
-  title: "تاكسي مطار الكويت | توصيل 24 ساعة بأسعار ثابتة | 55205485",
+  title: "تاكسي مطار الكويت | توصيل 24 ساعة بأسعار ثابتة | 97896907",
   description:
-    "احجز تاكسي مطار الكويت — استقبال داخل صالة الوصول بلوحة باسمك، تتبع الرحلات الجوية، 60 دقيقة انتظار مجاني، وأسعار ثابتة لجميع المناطق. اتصل أو واتساب 55205485.",
+    "احجز تاكسي مطار الكويت — استقبال داخل صالة الوصول بلوحة باسمك، تتبع الرحلات الجوية، 60 دقيقة انتظار مجاني، وأسعار ثابتة لجميع المناطق. اتصل أو واتساب 97896907.",
   alternates: {
     canonical: "/ar/airport-taxi",
     languages: { en: "/airport-taxi", ar: "/ar/airport-taxi" },

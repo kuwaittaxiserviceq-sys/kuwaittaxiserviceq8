@@ -22,7 +22,7 @@ export default function GccBanner() {
           </div>
         </div>
         <a
-          href="https://wa.me/96555205485?text=Hi%2C%20I%20want%20a%20quote%20for%20Kuwait%20to%20UAE%2FBahrain"
+          href="https://wa.me/96597896907?text=Hi%2C%20I%20want%20a%20quote%20for%20Kuwait%20to%20UAE%2FBahrain"
           target="_blank"
           rel="noopener noreferrer"
           className="group flex h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-brand-green px-7 text-base font-semibold text-white transition-colors hover:bg-emerald-600"

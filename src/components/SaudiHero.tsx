@@ -38,7 +38,7 @@ export default function SaudiHero() {
             Book a Saudi Transfer
           </Link>
           <a
-            href="https://wa.me/96555205485?text=Hi%2C%20I%20want%20to%20book%20a%20Kuwait%20%E2%86%94%20Saudi%20Arabia%20transfer"
+            href="https://wa.me/96597896907?text=Hi%2C%20I%20want%20to%20book%20a%20Kuwait%20%E2%86%94%20Saudi%20Arabia%20transfer"
             target="_blank"
             rel="noopener noreferrer"
             className="flex h-12 items-center justify-center rounded-full border border-white/20 px-8 text-base font-semibold text-white transition-colors hover:bg-white/10"

@@ -19,7 +19,7 @@ export default function ContactForm() {
       `Subject: ${val("subject")}`,
       `Message: ${val("message")}`,
     ].filter(Boolean);
-    const url = `https://wa.me/96555205485?text=${encodeURIComponent(lines.join("\n"))}`;
+    const url = `https://wa.me/96597896907?text=${encodeURIComponent(lines.join("\n"))}`;
     window.open(url, "_blank", "noopener,noreferrer");
   }
 

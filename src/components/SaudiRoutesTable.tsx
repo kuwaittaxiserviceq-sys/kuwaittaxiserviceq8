@@ -54,8 +54,8 @@ export default function SaudiRoutesTable() {
           Long-haul routes (Riyadh, Jeddah, Makkah, Madinah) include
           scheduled rest stops. Need a city not listed — Taif, Abha,
           Al-Ahsa, Qassim? Call{" "}
-          <a href="tel:+96555205485" className="font-semibold text-brand-green">
-            +965 5520 5485
+          <a href="tel:+96597896907" className="font-semibold text-brand-green">
+            +965 9789 6907
           </a>{" "}
           for an instant quote.
         </p>

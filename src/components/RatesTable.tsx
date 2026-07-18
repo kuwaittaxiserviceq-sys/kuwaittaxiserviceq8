@@ -147,8 +147,8 @@ export default function RatesTable() {
         <p className="text-sm text-zinc-600">
           If you don&apos;t see your city or area in this price list, please
           call us at{" "}
-          <a href="tel:+96555205485" className="font-semibold text-brand-green">
-            +965 5520 5485
+          <a href="tel:+96597896907" className="font-semibold text-brand-green">
+            +965 9789 6907
           </a>{" "}
           or send a message — we&apos;ll reply with your fare instantly.
         </p>

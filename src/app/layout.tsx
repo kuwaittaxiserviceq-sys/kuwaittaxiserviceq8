@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   },
   title: "Kuwait Taxi Service | Airport Taxi & Transfers in Kuwait — 24/7 Fixed Fares",
   description:
-    "Book a taxi in Kuwait — airport taxi to Kuwait International Airport, city rides, and Kuwait-to-Saudi transfers. Fixed fares, licensed drivers, 24/7 in all governorates. Call 5520 5485.",
+    "Book a taxi in Kuwait — airport taxi to Kuwait International Airport, city rides, and Kuwait-to-Saudi transfers. Fixed fares, licensed drivers, 24/7 in all governorates. Call 9789 6907.",
   openGraph: {
     type: "website",
     siteName: "Kuwait Taxi Service",
@@ -58,7 +58,7 @@ const structuredData = {
       "@type": "TaxiService",
       name: "Kuwait Taxi Service",
       url: "https://kuwaittaxiserviceq8.com",
-      telephone: "+96555205485",
+      telephone: "+96597896907",
       email: "kuwaittaxiserviceq@gmail.com",
       areaServed: [
         "Al Asimah",
@@ -76,7 +76,7 @@ const structuredData = {
       "@id": "https://kuwaittaxiserviceq8.com/#business",
       name: "Kuwait Taxi Service",
       url: "https://kuwaittaxiserviceq8.com",
-      telephone: "+96555205485",
+      telephone: "+96597896907",
       email: "kuwaittaxiserviceq@gmail.com",
       image: "https://kuwaittaxiserviceq8.com/images/kuwait-taxi-service-hero.webp",
       logo: "https://kuwaittaxiserviceq8.com/icon.svg",

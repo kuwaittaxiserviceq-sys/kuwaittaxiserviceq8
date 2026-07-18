@@ -74,7 +74,7 @@ export default function AdminShell({
         {/* Sidebar footer */}
         <div className="mt-auto flex flex-col gap-2 border-t border-white/10 px-3 py-4">
           <a
-            href="https://wa.me/96555205485"
+            href="https://wa.me/96597896907"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-3 rounded-xl bg-[#25D366]/15 px-4 py-3 text-sm font-semibold text-[#4ade80] transition-colors hover:bg-[#25D366]/25"
@@ -122,7 +122,7 @@ export default function AdminShell({
               </Link>
             ))}
             <a
-              href="https://wa.me/96555205485"
+              href="https://wa.me/96597896907"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="WhatsApp"

@@ -21,8 +21,8 @@ export default function BusinessInquiries() {
               kuwaittaxiserviceq@gmail.com
             </a>
             . Alternatively, call us on{" "}
-            <a href="tel:+96555205485" className="font-semibold text-brand-green">
-              +965 5520 5485
+            <a href="tel:+96597896907" className="font-semibold text-brand-green">
+              +965 9789 6907
             </a>
             . Looking for our rates? Visit our{" "}
             <Link href="/#rates" className="font-semibold text-brand-green underline underline-offset-2">
