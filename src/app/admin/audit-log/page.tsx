@@ -190,9 +190,15 @@ export default function AuditLogPage() {
                 <div className="flex justify-center py-20">
                     <Loader2 className="w-8 h-8 animate-spin text-neutral-400" />
                 </div>
+            ) : filtered.length === 0 ? (
+                <div className="text-center py-16 text-neutral-500 bg-neutral-800 rounded-xl border border-neutral-700">
+                    <ClipboardList className="w-10 h-10 mx-auto mb-3 opacity-30" />
+                    <p>No audit logs found.</p>
+                </div>
             ) : (
                 <div className="bg-neutral-800 rounded-xl border border-neutral-700 overflow-hidden">
-                    <div className="overflow-x-auto">
+                    {/* Desktop Table */}
+                    <div className="hidden md:block overflow-x-auto">
                         <table className="w-full min-w-[700px]">
                             <thead className="bg-neutral-900/50">
                                 <tr className="border-b border-neutral-700">
@@ -254,12 +260,46 @@ export default function AuditLogPage() {
                         </table>
                     </div>
 
-                    {filtered.length === 0 && (
-                        <div className="text-center py-16 text-neutral-500">
-                            <ClipboardList className="w-10 h-10 mx-auto mb-3 opacity-30" />
-                            <p>No audit logs found.</p>
-                        </div>
-                    )}
+                    {/* Mobile Cards */}
+                    <div className="md:hidden divide-y divide-neutral-700/50">
+                        {paginated.map(log => {
+                            const cfg = ACTION_CONFIG[log.action] || {
+                                icon: <ClipboardList className="w-3.5 h-3.5" />,
+                                color: 'bg-neutral-500/15 text-neutral-400',
+                                label: log.action
+                            };
+                            return (
+                                <div key={log.id} className="p-4">
+                                    <div className="flex items-center justify-between gap-2 mb-2">
+                                        <Badge className={`text-[10px] border-0 flex items-center gap-1.5 w-fit ${cfg.color}`}>
+                                            {cfg.icon}
+                                            {cfg.label}
+                                        </Badge>
+                                        <span className="text-[10px] text-neutral-500 font-mono">{timeStr(log.created_at)}</span>
+                                    </div>
+                                    <div className="flex items-center gap-3 text-xs mb-1.5">
+                                        <span className="text-neutral-500">Booking:</span>
+                                        <span className="font-mono text-neutral-300">#{log.booking_id.slice(0, 8).toUpperCase()}</span>
+                                    </div>
+                                    <p className="text-xs text-neutral-500 mb-1.5">{log.admin_email}</p>
+                                    {log.field_name && (
+                                        <div className="flex items-center gap-1.5 text-xs flex-wrap">
+                                            <span className="text-neutral-500 font-mono">{log.field_name}:</span>
+                                            {log.old_value && (
+                                                <span className="bg-red-500/10 text-red-400 px-1.5 py-0.5 rounded text-[10px] line-through">{log.old_value}</span>
+                                            )}
+                                            {log.new_value && (
+                                                <span className="bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5 rounded text-[10px] font-bold">{log.new_value}</span>
+                                            )}
+                                        </div>
+                                    )}
+                                    {!log.field_name && log.new_value && (
+                                        <span className="text-xs text-neutral-400">{log.new_value}</span>
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </div>
 
                     {/* Pagination */}
                     {totalPages > 1 && (

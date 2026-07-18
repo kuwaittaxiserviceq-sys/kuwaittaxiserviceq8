@@ -141,7 +141,7 @@ export default function AdminDashboard() {
     return (
         <div className="text-white">
             {/* Header */}
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-8">
                 <div>
                     <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500">
                         Dashboard

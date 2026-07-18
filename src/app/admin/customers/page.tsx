@@ -225,90 +225,142 @@ export default function CustomersPage() {
                 <div className="flex justify-center py-20">
                     <Loader2 className="w-8 h-8 animate-spin text-neutral-400" />
                 </div>
+            ) : filtered.length === 0 ? (
+                <div className="text-center py-16 text-neutral-500 bg-neutral-800 rounded-xl border border-neutral-700">No customers found.</div>
             ) : (
-                <div className="bg-neutral-800 rounded-xl border border-neutral-700 overflow-x-auto">
-                    <table className="w-full min-w-[680px]">
-                        <thead className="bg-neutral-900/50">
-                            <tr className="border-b border-neutral-700">
-                                <th className="text-left px-5 py-3 text-xs text-neutral-400 uppercase tracking-widest font-bold">Customer</th>
-                                <th className="text-left px-5 py-3 text-xs text-neutral-400 uppercase tracking-widest font-bold">Contact</th>
-                                <th className="text-center px-5 py-3 text-xs text-neutral-400 uppercase tracking-widest font-bold">Trips</th>
-                                <th className="text-right px-5 py-3 text-xs text-neutral-400 uppercase tracking-widest font-bold">Lifetime Value</th>
-                                <th className="text-left px-5 py-3 text-xs text-neutral-400 uppercase tracking-widest font-bold">Last Trip</th>
-                                <th className="text-left px-5 py-3 text-xs text-neutral-400 uppercase tracking-widest font-bold">Notes</th>
-                                <th className="w-12" />
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filtered.map(c => (
-                                <tr
-                                    key={c.phone}
-                                    className="border-b border-neutral-700/50 hover:bg-neutral-700/30 transition-colors cursor-pointer"
-                                    onClick={() => openSheet(c)}
-                                >
-                                    <td className="px-5 py-4">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-9 h-9 rounded-full bg-neutral-700 flex items-center justify-center font-black text-white shrink-0">
-                                                {c.name.charAt(0).toUpperCase()}
-                                            </div>
-                                            <div>
-                                                <div className="flex items-center gap-1.5">
-                                                    <span className="font-bold text-white text-sm">{c.name}</span>
-                                                    {c.isVIP && <Crown className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />}
-                                                </div>
-                                                <span className="text-[10px] font-bold">
-                                                    {c.isVIP
-                                                        ? <span className="text-amber-400">VIP Customer</span>
-                                                        : c.isRepeat
-                                                        ? <span className="text-emerald-400">Repeat Customer</span>
-                                                        : null
-                                                    }
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td className="px-5 py-4">
-                                        <p className="text-sm text-neutral-300 flex items-center gap-1.5">
-                                            <Phone className="w-3 h-3 text-neutral-500 shrink-0" />{c.phone}
-                                        </p>
-                                        <p className="text-xs text-neutral-500 flex items-center gap-1.5 mt-0.5 truncate max-w-[180px]">
-                                            <Mail className="w-3 h-3 shrink-0" />{c.email}
-                                        </p>
-                                    </td>
-                                    <td className="px-5 py-4 text-center">
-                                        <span className="text-2xl font-black text-white">{c.totalBookings}</span>
-                                    </td>
-                                    <td className="px-5 py-4 text-right">
-                                        <span className="font-black text-primary">
-                                            {c.totalSpent > 0 ? `KWD ${c.totalSpent.toLocaleString()}` : '—'}
-                                        </span>
-                                    </td>
-                                    <td className="px-5 py-4">
-                                        <span className="text-sm text-neutral-300">{c.lastBookingDate}</span>
-                                    </td>
-                                    <td className="px-5 py-4">
-                                        {c.notes
-                                            ? <span className="text-xs text-neutral-400 italic truncate max-w-[140px] block">{c.notes}</span>
-                                            : <span className="text-xs text-neutral-600">—</span>
-                                        }
-                                    </td>
-                                    <td className="px-3 py-4">
-                                        <Button
-                                            variant="ghost" size="icon"
-                                            className="h-8 w-8 text-neutral-400 hover:text-white hover:bg-neutral-600"
-                                            onClick={e => { e.stopPropagation(); openSheet(c); }}
-                                        >
-                                            <Eye className="h-4 w-4" />
-                                        </Button>
-                                    </td>
+                <>
+                    {/* Desktop Table */}
+                    <div className="hidden md:block bg-neutral-800 rounded-xl border border-neutral-700 overflow-x-auto">
+                        <table className="w-full min-w-[680px]">
+                            <thead className="bg-neutral-900/50">
+                                <tr className="border-b border-neutral-700">
+                                    <th className="text-left px-5 py-3 text-xs text-neutral-400 uppercase tracking-widest font-bold">Customer</th>
+                                    <th className="text-left px-5 py-3 text-xs text-neutral-400 uppercase tracking-widest font-bold">Contact</th>
+                                    <th className="text-center px-5 py-3 text-xs text-neutral-400 uppercase tracking-widest font-bold">Trips</th>
+                                    <th className="text-right px-5 py-3 text-xs text-neutral-400 uppercase tracking-widest font-bold">Lifetime Value</th>
+                                    <th className="text-left px-5 py-3 text-xs text-neutral-400 uppercase tracking-widest font-bold">Last Trip</th>
+                                    <th className="text-left px-5 py-3 text-xs text-neutral-400 uppercase tracking-widest font-bold">Notes</th>
+                                    <th className="w-12" />
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                    {filtered.length === 0 && (
-                        <div className="text-center py-16 text-neutral-500">No customers found.</div>
-                    )}
-                </div>
+                            </thead>
+                            <tbody>
+                                {filtered.map(c => (
+                                    <tr
+                                        key={c.phone}
+                                        className="border-b border-neutral-700/50 hover:bg-neutral-700/30 transition-colors cursor-pointer"
+                                        onClick={() => openSheet(c)}
+                                    >
+                                        <td className="px-5 py-4">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-9 h-9 rounded-full bg-neutral-700 flex items-center justify-center font-black text-white shrink-0">
+                                                    {c.name.charAt(0).toUpperCase()}
+                                                </div>
+                                                <div>
+                                                    <div className="flex items-center gap-1.5">
+                                                        <span className="font-bold text-white text-sm">{c.name}</span>
+                                                        {c.isVIP && <Crown className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />}
+                                                    </div>
+                                                    <span className="text-[10px] font-bold">
+                                                        {c.isVIP
+                                                            ? <span className="text-amber-400">VIP Customer</span>
+                                                            : c.isRepeat
+                                                            ? <span className="text-emerald-400">Repeat Customer</span>
+                                                            : null
+                                                        }
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td className="px-5 py-4">
+                                            <p className="text-sm text-neutral-300 flex items-center gap-1.5">
+                                                <Phone className="w-3 h-3 text-neutral-500 shrink-0" />{c.phone}
+                                            </p>
+                                            <p className="text-xs text-neutral-500 flex items-center gap-1.5 mt-0.5 truncate max-w-[180px]">
+                                                <Mail className="w-3 h-3 shrink-0" />{c.email}
+                                            </p>
+                                        </td>
+                                        <td className="px-5 py-4 text-center">
+                                            <span className="text-2xl font-black text-white">{c.totalBookings}</span>
+                                        </td>
+                                        <td className="px-5 py-4 text-right">
+                                            <span className="font-black text-primary">
+                                                {c.totalSpent > 0 ? `KWD ${c.totalSpent.toLocaleString()}` : '—'}
+                                            </span>
+                                        </td>
+                                        <td className="px-5 py-4">
+                                            <span className="text-sm text-neutral-300">{c.lastBookingDate}</span>
+                                        </td>
+                                        <td className="px-5 py-4">
+                                            {c.notes
+                                                ? <span className="text-xs text-neutral-400 italic truncate max-w-[140px] block">{c.notes}</span>
+                                                : <span className="text-xs text-neutral-600">—</span>
+                                            }
+                                        </td>
+                                        <td className="px-3 py-4">
+                                            <Button
+                                                variant="ghost" size="icon"
+                                                className="h-8 w-8 text-neutral-400 hover:text-white hover:bg-neutral-600"
+                                                onClick={e => { e.stopPropagation(); openSheet(c); }}
+                                            >
+                                                <Eye className="h-4 w-4" />
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {/* Mobile Cards */}
+                    <div className="md:hidden space-y-3">
+                        {filtered.map(c => (
+                            <div
+                                key={c.phone}
+                                onClick={() => openSheet(c)}
+                                className="bg-neutral-800 rounded-xl border border-neutral-700 p-4 cursor-pointer hover:bg-neutral-700/50 transition-colors"
+                            >
+                                <div className="flex items-center justify-between gap-3 mb-3">
+                                    <div className="flex items-center gap-3 min-w-0">
+                                        <div className="w-10 h-10 rounded-full bg-neutral-700 flex items-center justify-center font-black text-white text-sm shrink-0">
+                                            {c.name.charAt(0).toUpperCase()}
+                                        </div>
+                                        <div className="min-w-0">
+                                            <div className="flex items-center gap-1.5">
+                                                <span className="font-bold text-white truncate">{c.name}</span>
+                                                {c.isVIP && <Crown className="w-3.5 h-3.5 text-amber-400 fill-amber-400 shrink-0" />}
+                                            </div>
+                                            <p className="text-[10px] font-bold">
+                                                {c.isVIP ? <span className="text-amber-400">VIP Customer</span>
+                                                    : c.isRepeat ? <span className="text-emerald-400">Repeat Customer</span>
+                                                    : <span className="text-neutral-500">New Customer</span>}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <span className="font-black text-primary text-sm shrink-0">
+                                        {c.totalSpent > 0 ? `KWD ${c.totalSpent.toLocaleString()}` : '—'}
+                                    </span>
+                                </div>
+                                <div className="grid grid-cols-2 gap-2 text-xs">
+                                    <div className="flex items-center gap-1.5 text-neutral-400">
+                                        <Phone className="w-3 h-3 shrink-0" />
+                                        <span className="truncate">{c.phone}</span>
+                                    </div>
+                                    <div className="flex items-center gap-1 text-neutral-400 justify-end">
+                                        <span className="font-black text-white text-lg">{c.totalBookings}</span>
+                                        <span className="text-neutral-500">trips</span>
+                                    </div>
+                                    <div className="flex items-center gap-1.5 text-neutral-500 col-span-2">
+                                        <Mail className="w-3 h-3 shrink-0" />
+                                        <span className="truncate">{c.email}</span>
+                                    </div>
+                                </div>
+                                {c.notes && (
+                                    <p className="text-[10px] text-neutral-500 italic mt-2 truncate">{c.notes}</p>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                </>
             )}
 
             {/* Customer Detail Sheet */}

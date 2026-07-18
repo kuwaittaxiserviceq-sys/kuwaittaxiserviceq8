@@ -141,7 +141,7 @@ export default function SupportPage() {
             )}
 
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-4 mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
                 {[
                     { label: 'Total',    value: inquiries.length,   color: 'text-white' },
                     { label: 'Open',     value: openCount,          color: 'text-red-400' },
