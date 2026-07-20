@@ -6,7 +6,7 @@ import StatsBar from "@/components/StatsBar";
 import TrafficSolutions from "@/components/TrafficSolutions";
 import VipExperience from "@/components/VipExperience";
 import Services from "@/components/Services";
-import SaudiCtaBanner from "@/components/SaudiCtaBanner";
+import PopularRoutes from "@/components/PopularRoutes";
 import Rates from "@/components/Rates";
 import ReserveCta from "@/components/ReserveCta";
 import AreasWeServe from "@/components/AreasWeServe";
@@ -28,7 +28,7 @@ export default function Home() {
         <TrafficSolutions />
         <VipExperience />
         <Services />
-        <SaudiCtaBanner />
+        <PopularRoutes />
         <Rates />
         <ReserveCta />
         <AreasWeServe />
