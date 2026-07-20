@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import SaudiHero from "@/components/SaudiHero";
+import PopularRoutes from "@/components/PopularRoutes";
 import RideInclusions from "@/components/RideInclusions";
 import SaudiRoutesTable from "@/components/SaudiRoutesTable";
 import BorderProcess from "@/components/BorderProcess";
@@ -80,6 +81,7 @@ export default function SaudiTransfersPage() {
       <Navbar />
       <main id="main-content" className="flex flex-1 flex-col">
         <SaudiHero />
+        <PopularRoutes />
         <RideInclusions />
         <SaudiRoutesTable />
         <GccBanner />
