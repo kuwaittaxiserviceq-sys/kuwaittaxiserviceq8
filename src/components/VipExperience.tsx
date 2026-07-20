@@ -10,10 +10,10 @@ const steps = [
 
 export default function VipExperience() {
   return (
-    <section className="bg-brand-black py-16 sm:py-20">
+    <section className="bg-brand-green-light py-16 sm:py-20">
       <Container className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
         <div className="order-2 flex items-center justify-center lg:order-1">
-          <div className="w-full max-w-sm rounded-3xl bg-white p-6 shadow-2xl shadow-black/50 sm:p-7">
+          <div className="w-full max-w-sm rounded-3xl bg-white p-6 shadow-xl shadow-zinc-900/10 ring-1 ring-black/5 sm:p-7">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-green text-white">
@@ -52,8 +52,8 @@ export default function VipExperience() {
             </div>
 
             <div className="relative my-7 -mx-6 sm:-mx-7">
-              <span className="absolute -left-3 top-1/2 h-6 w-6 -translate-y-1/2 rounded-full bg-brand-black" />
-              <span className="absolute -right-3 top-1/2 h-6 w-6 -translate-y-1/2 rounded-full bg-brand-black" />
+              <span className="absolute -left-3 top-1/2 h-6 w-6 -translate-y-1/2 rounded-full bg-brand-green-light" />
+              <span className="absolute -right-3 top-1/2 h-6 w-6 -translate-y-1/2 rounded-full bg-brand-green-light" />
               <div className="mx-6 border-t-2 border-dashed border-zinc-200 sm:mx-7" />
             </div>
 
@@ -83,10 +83,10 @@ export default function VipExperience() {
             <span className="text-sm font-bold uppercase tracking-wide text-brand-red">
               The Experience
             </span>
-            <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+            <h2 className="text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl">
               The VIP Arrival Experience
             </h2>
-            <p className="text-zinc-400">
+            <p className="text-zinc-600">
               Step-by-step, here&apos;s exactly what happens from booking to
               your final drop-off.
             </p>
@@ -99,10 +99,10 @@ export default function VipExperience() {
                   <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-green text-sm font-bold text-white">
                     {i + 1}
                   </span>
-                  <Icon className="h-5 w-5 text-emerald-400" />
+                  <Icon className="h-5 w-5 text-brand-green" />
                 </div>
-                <h3 className="font-semibold text-white">{title}</h3>
-                <p className="text-sm leading-6 text-zinc-400">{description}</p>
+                <h3 className="font-semibold text-zinc-900">{title}</h3>
+                <p className="text-sm leading-6 text-zinc-600">{description}</p>
               </div>
             ))}
           </div>
