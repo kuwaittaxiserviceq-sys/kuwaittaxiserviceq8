@@ -35,22 +35,15 @@ export default function TrafficSolutions() {
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           {cards.map(({ icon: Icon, title, description }) => (
-            <div key={title} className="flex flex-col overflow-hidden rounded-2xl ring-1 ring-black/5">
-              <div className="relative flex h-40 items-center justify-center bg-gradient-to-br from-brand-green-dark to-brand-green">
-                <div
-                  className="absolute inset-0 opacity-10"
-                  style={{
-                    backgroundImage:
-                      "radial-gradient(circle, #ffffff 1px, transparent 1px)",
-                    backgroundSize: "20px 20px",
-                  }}
-                />
-                <Icon className="relative h-14 w-14 text-white/90" strokeWidth={1.25} />
-              </div>
-              <div className="flex flex-col gap-2 bg-white p-6">
-                <h3 className="text-lg font-semibold text-zinc-900">{title}</h3>
-                <p className="text-sm leading-6 text-zinc-600">{description}</p>
-              </div>
+            <div
+              key={title}
+              className="group flex flex-col gap-4 rounded-2xl bg-white p-7 ring-1 ring-black/5 transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-zinc-900/5"
+            >
+              <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-green-light text-brand-green transition-colors group-hover:bg-brand-green group-hover:text-white">
+                <Icon className="h-7 w-7" strokeWidth={1.5} />
+              </span>
+              <h3 className="text-lg font-semibold text-zinc-900">{title}</h3>
+              <p className="text-sm leading-6 text-zinc-600">{description}</p>
             </div>
           ))}
         </div>
