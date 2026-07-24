@@ -1,5 +1,12 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import {
+  ArrowRight,
+  Building2,
+  Landmark,
+  PlaneLanding,
+  Sun,
+  Waves,
+} from "lucide-react";
 import Container from "./Container";
 import SectionHeading from "./SectionHeading";
 import { slugifyArea } from "@/lib/areas";
@@ -18,23 +25,27 @@ const areas = [
   "Mahboula",
 ];
 
-const cardCrops = [
-  { position: "50% 35%", scale: 1 },
-  { position: "78% 55%", scale: 1.9 },
-  { position: "15% 60%", scale: 2.3 },
-  { position: "60% 20%", scale: 1.3 },
-  { position: "35% 70%", scale: 1.7 },
-  { position: "88% 30%", scale: 1.5 },
-];
+const governorateStyle: Record<string, { gradient: string; icon: typeof Landmark }> = {
+  "Al Asimah": { gradient: "from-brand-green-dark to-brand-green", icon: Landmark },
+  Hawalli: { gradient: "from-emerald-700 to-emerald-500", icon: Building2 },
+  Farwaniya: { gradient: "from-teal-700 to-teal-500", icon: PlaneLanding },
+  Ahmadi: { gradient: "from-cyan-700 to-cyan-600", icon: Waves },
+  Jahra: { gradient: "from-amber-700 to-amber-600", icon: Sun },
+  "Mubarak Al-Kabeer": { gradient: "from-emerald-800 to-teal-600", icon: Building2 },
+};
 
-function nearbyAreas(area: string) {
+function areaMeta(area: string) {
   const row = ratesData.find((r) => r.area === area);
-  if (!row) return null;
-  return ratesData
-    .filter((r) => r.governorate === row.governorate && r.area !== area)
-    .slice(0, 2)
-    .map((r) => r.area)
-    .join(", ");
+  const style = row ? governorateStyle[row.governorate] : undefined;
+  const nearby = row
+    ? ratesData
+        .filter((r) => r.governorate === row.governorate && r.area !== area)
+        .slice(0, 2)
+        .map((r) => r.area)
+        .join(", ")
+    : null;
+
+  return { style: style ?? governorateStyle["Al Asimah"], nearby };
 }
 
 export default function AreasWeServe() {
@@ -48,31 +59,37 @@ export default function AreasWeServe() {
         />
 
         <div className="flex w-full snap-x snap-mandatory gap-5 overflow-x-auto pb-4">
-          {areas.map((area, i) => (
-            <Link
-              key={area}
-              href={`/areas/${slugifyArea(area)}`}
-              className="group relative h-44 w-56 shrink-0 snap-start overflow-hidden rounded-2xl ring-1 ring-black/5 transition-shadow hover:shadow-xl"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/images/kuwait-taxi-service-hero.webp"
-                alt={`Taxi service in ${area}, Kuwait`}
-                className="h-full w-full object-cover"
-                style={{
-                  objectPosition: cardCrops[i % cardCrops.length].position,
-                  transform: `scale(${cardCrops[i % cardCrops.length].scale})`,
-                }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
-              <div className="absolute bottom-0 left-0 flex flex-col gap-0.5 p-4">
-                <h3 className="font-bold text-white">{area}</h3>
-                <span className="text-xs text-zinc-200">
-                  {nearbyAreas(area) || "Daily transfers & city rides"}
-                </span>
-              </div>
-            </Link>
-          ))}
+          {areas.map((area) => {
+            const { style, nearby } = areaMeta(area);
+            const Icon = style.icon;
+
+            return (
+              <Link
+                key={area}
+                href={`/areas/${slugifyArea(area)}`}
+                className={`group relative flex h-44 w-56 shrink-0 snap-start flex-col justify-end overflow-hidden rounded-2xl bg-gradient-to-br p-4 ring-1 ring-black/5 transition-shadow hover:shadow-xl ${style.gradient}`}
+              >
+                <div
+                  className="absolute inset-0 opacity-10"
+                  style={{
+                    backgroundImage:
+                      "radial-gradient(circle, #ffffff 1px, transparent 1px)",
+                    backgroundSize: "18px 18px",
+                  }}
+                />
+                <Icon
+                  className="absolute -right-3 -top-3 h-24 w-24 text-white/10 transition-transform group-hover:scale-110"
+                  strokeWidth={1}
+                />
+                <div className="relative flex flex-col gap-0.5">
+                  <h3 className="font-bold text-white">{area}</h3>
+                  <span className="text-xs text-white/70">
+                    {nearby || "Daily transfers & city rides"}
+                  </span>
+                </div>
+              </Link>
+            );
+          })}
 
           <Link
             href="/areas"
