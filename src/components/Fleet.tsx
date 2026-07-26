@@ -1,31 +1,32 @@
-import { Briefcase, Car, CarFront, Crown, User, Users } from "lucide-react";
+import { Briefcase, User } from "lucide-react";
 import Container from "./Container";
 import SectionHeading from "./SectionHeading";
+import VehicleIllustration from "./VehicleIllustration";
 
 const fleet = [
   {
-    icon: Car,
+    type: "sedan" as const,
     name: "Sedan",
     pax: 3,
     bags: 3,
     description: "Ideal for city rides & airport pickups.",
   },
   {
-    icon: CarFront,
+    type: "suv" as const,
     name: "SUV",
     pax: 6,
     bags: 6,
     description: "Great for families & groups with luggage.",
   },
   {
-    icon: Users,
+    type: "van" as const,
     name: "Van",
     pax: 10,
     bags: 10,
     description: "Built for group transfers & events.",
   },
   {
-    icon: Crown,
+    type: "luxury" as const,
     name: "Luxury Sedan",
     pax: 3,
     bags: 2,
@@ -44,13 +45,21 @@ export default function Fleet() {
         />
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {fleet.map(({ icon: Icon, name, pax, bags, description }) => (
+          {fleet.map(({ type, name, pax, bags, description }) => (
             <div
               key={name}
               className="flex flex-col overflow-hidden rounded-2xl bg-zinc-900 ring-1 ring-white/10"
             >
-              <div className="flex h-32 items-center justify-center bg-gradient-to-br from-brand-green-dark to-brand-green">
-                <Icon className="h-12 w-12 text-white/90" strokeWidth={1.25} />
+              <div className="relative flex h-32 items-center justify-center overflow-hidden bg-gradient-to-br from-brand-green-dark to-brand-green">
+                <div
+                  className="absolute inset-0 opacity-10"
+                  style={{
+                    backgroundImage:
+                      "radial-gradient(circle, #ffffff 1px, transparent 1px)",
+                    backgroundSize: "18px 18px",
+                  }}
+                />
+                <VehicleIllustration type={type} />
               </div>
               <div className="flex flex-col gap-3 p-5">
                 <h3 className="font-semibold text-white">{name}</h3>
