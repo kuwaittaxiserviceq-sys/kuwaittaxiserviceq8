@@ -1,5 +1,6 @@
 import {
   ArrowLeftRight,
+  ArrowRight,
   Briefcase,
   Building2,
   CarFront,
@@ -63,24 +64,31 @@ export default function Services() {
         <SectionHeading eyebrow="What We Offer" title="Our Services" />
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {services.map(({ icon: Icon, title, description, href, cta }) => (
+          {services.map(({ icon: Icon, title, description, href, cta }, i) => (
             <div
               key={title}
-              className="flex flex-col overflow-hidden rounded-2xl ring-1 ring-black/5"
+              className="group relative flex flex-col gap-4 overflow-hidden rounded-2xl bg-white p-7 ring-1 ring-black/5 transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-zinc-900/5"
             >
-              <div className="relative flex h-36 items-center justify-center bg-gradient-to-br from-brand-green to-emerald-700">
-                <Icon className="h-12 w-12 text-white/90" strokeWidth={1.25} />
-              </div>
-              <div className="flex flex-1 flex-col gap-3 p-6">
+              <span
+                aria-hidden
+                className="pointer-events-none absolute -right-1 -top-5 text-6xl font-black text-brand-green-light select-none"
+              >
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <span className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-green text-white shadow-lg shadow-brand-green/30 transition-transform duration-300 group-hover:-rotate-6">
+                <Icon className="h-7 w-7" strokeWidth={1.5} />
+              </span>
+              <div className="relative flex flex-1 flex-col gap-2">
                 <h3 className="text-lg font-semibold text-zinc-900">{title}</h3>
                 <p className="text-sm leading-6 text-zinc-600">{description}</p>
-                <a
-                  href={href}
-                  className="mt-auto inline-flex w-fit items-center justify-center rounded-full bg-brand-green px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-green-dark"
-                >
-                  {cta ?? "Book This Service"}
-                </a>
               </div>
+              <a
+                href={href}
+                className="relative mt-auto inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-brand-green"
+              >
+                {cta ?? "Book This Service"}
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </a>
             </div>
           ))}
         </div>
