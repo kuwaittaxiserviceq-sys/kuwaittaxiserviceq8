@@ -14,9 +14,9 @@ import { breadcrumbSchema, serviceSchema, JsonLd } from "@/lib/schema";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/saudi-transfers" },
-  title: "Kuwait to Saudi Arabia Taxi | Border Crossing Transfers | Kuwait Taxi Service",
+  title: "Kuwait to Saudi Arabia Taxi | Nuwaiseeb Border Transfer",
   description:
-    "Door-to-door taxi between Kuwait and all major Saudi cities and airports — Khafji, Dammam, Khobar, Riyadh, Jeddah, Makkah, Madinah. Same vehicle across the border, fixed fares, 24/7, both directions.",
+    "Fixed-price taxi from Kuwait to Saudi Arabia via Nuwaiseeb border. Reliable drivers, clear pricing, no delays. Book your border transfer today.",
 };
 
 const saudiFaqs = [

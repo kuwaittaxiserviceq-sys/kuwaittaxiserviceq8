@@ -12,9 +12,9 @@ import { breadcrumbSchema, serviceSchema, JsonLd } from "@/lib/schema";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/rates" },
-  title: "Taxi Fares in Kuwait | Airport Taxi Prices & Flat Rates | Kuwait Taxi Service",
+  title: "Kuwait Taxi Fares 2026 | Transparent Pricing - No Hidden Fees",
   description:
-    "Kuwait taxi fares and airport taxi prices for every governorate — search flat rates by area, from sedans to 14-passenger vans. No surge pricing, ever.",
+    "See exact taxi fares across Kuwait areas & airport transfers before you book. Fixed rates, no meter surprises. Check your route price now.",
 };
 
 const allFares = ratesData.flatMap((r) => [r.sedan, r.suv, r.van8, r.van14]);

@@ -32,22 +32,22 @@ export const metadata: Metadata = {
     canonical: "/",
     languages: { en: "/", ar: "/ar" },
   },
-  title: "Kuwait Taxi Service | Airport Taxi & Transfers in Kuwait — 24/7 Fixed Fares",
+  title: "Kuwait Taxi Service | 24/7 Airport Pickup & Fixed Rates - Q8",
   description:
-    "Book a taxi in Kuwait — airport taxi to Kuwait International Airport, city rides, and Kuwait-to-Saudi transfers. Fixed fares, licensed drivers, 24/7 in all governorates. Call 9789 6907.",
+    "Reliable taxi service across Kuwait — airport transfers, city rides & Saudi border trips. Fixed prices, no surge, book online or call now. Available 24/7.",
   openGraph: {
     type: "website",
     siteName: "Kuwait Taxi Service",
-    title: "Kuwait Taxi Service | Airport Taxi & Transfers in Kuwait — 24/7",
+    title: "Kuwait Taxi Service | 24/7 Airport Pickup & Fixed Rates - Q8",
     description:
-      "Airport taxi, city rides, and Kuwait-to-Saudi transfers at fixed fares — 24/7 with licensed drivers in every governorate.",
+      "Reliable taxi service across Kuwait — airport transfers, city rides & Saudi border trips. Fixed prices, no surge, book online or call now.",
     locale: "en_KW",
   },
   twitter: {
     card: "summary",
-    title: "Kuwait Taxi Service | Airport Taxi & Transfers in Kuwait — 24/7",
+    title: "Kuwait Taxi Service | 24/7 Airport Pickup & Fixed Rates - Q8",
     description:
-      "Airport taxi, city rides, and Kuwait-to-Saudi transfers at fixed fares — 24/7 across Kuwait.",
+      "Reliable taxi service across Kuwait — airport transfers, city rides & Saudi border trips. Fixed prices, no surge, available 24/7.",
   },
 };
 

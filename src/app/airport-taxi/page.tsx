@@ -19,9 +19,9 @@ export const metadata: Metadata = {
     canonical: "/airport-taxi",
     languages: { en: "/airport-taxi", ar: "/ar/airport-taxi" },
   },
-  title: "Kuwait Airport Taxi | 24/7 Airport Transfer at Fixed Fares (KWI)",
+  title: "Kuwait Airport Taxi | Instant Booking, Fixed Price - No Surge",
   description:
-    "Pre-book your Kuwait airport taxi — meet & greet inside arrivals, flight tracking, 60 minutes free waiting, and fixed fares to every area. 24/7 at Kuwait International Airport. Call 9789 6907.",
+    "Book your Kuwait Airport taxi in advance. Meet & greet, flight tracking, fixed fare — no hidden charges. Reserve online in under 2 minutes.",
 };
 
 const airportFaqs = [

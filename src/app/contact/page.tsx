@@ -11,9 +11,9 @@ import { breadcrumbSchema, JsonLd } from "@/lib/schema";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/contact" },
-  title: "Contact Kuwait Taxi Service | Book by Phone, WhatsApp or Email — 24/7",
+  title: "Kuwait Taxi Company | Call or WhatsApp - Instant Booking",
   description:
-    "Get in touch with Kuwait Taxi Service for bookings, corporate accounts, and custom routes. Available 24/7 by phone, WhatsApp, or email.",
+    "Need a taxi in Kuwait now? Call, WhatsApp, or book online. Fast pickup, professional drivers, available across all Kuwait areas.",
 };
 
 const contactBreadcrumbs = breadcrumbSchema([
