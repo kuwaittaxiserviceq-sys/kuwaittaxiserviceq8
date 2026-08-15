@@ -7,6 +7,7 @@ import { CarFront, Globe, Mail, Menu, MessageCircle, Phone, X } from "lucide-rea
 const links = [
   { href: "/ar", label: "الرئيسية" },
   { href: "/ar/airport-taxi", label: "تاكسي المطار" },
+  { href: "/ar/saudi-transfers", label: "رحلات السعودية" },
   { href: "/ar#services", label: "خدماتنا" },
   { href: "/ar#rates", label: "أسعارنا" },
   { href: "/ar#areas", label: "المناطق" },

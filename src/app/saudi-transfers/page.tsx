@@ -13,7 +13,10 @@ import { saudiRoutes } from "@/components/saudiRoutes";
 import { breadcrumbSchema, serviceSchema, JsonLd } from "@/lib/schema";
 
 export const metadata: Metadata = {
-  alternates: { canonical: "/saudi-transfers" },
+  alternates: {
+    canonical: "/saudi-transfers",
+    languages: { en: "/saudi-transfers", ar: "/ar/saudi-transfers" },
+  },
   title: "Kuwait to Saudi Arabia Taxi | Nuwaiseeb Border Transfer",
   description:
     "Fixed-price taxi from Kuwait to Saudi Arabia via Nuwaiseeb border. Reliable drivers, clear pricing, no delays. Book your border transfer today.",
