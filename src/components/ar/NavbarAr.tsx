@@ -81,6 +81,13 @@ export default function NavbarAr() {
               English
             </Link>
             <a
+              href="tel:+96597896907"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-zinc-100 text-zinc-700 transition-colors hover:bg-zinc-200 sm:hidden"
+              aria-label="اتصل 9789 6907"
+            >
+              <Phone className="h-5 w-5" />
+            </a>
+            <a
               href="https://wa.me/96597896907?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%AD%D8%AC%D8%B2%20%D8%AA%D8%A7%D9%83%D8%B3%D9%8A"
               className="hidden h-10 shrink-0 items-center gap-2 whitespace-nowrap rounded-full bg-brand-green px-5 text-sm font-semibold text-white transition-colors hover:bg-brand-green-dark sm:flex"
             >

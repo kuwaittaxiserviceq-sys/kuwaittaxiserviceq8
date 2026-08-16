@@ -89,6 +89,13 @@ export default function Navbar() {
               العربية
             </Link>
             <a
+              href="tel:+96597896907"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-zinc-100 text-zinc-700 transition-colors hover:bg-zinc-200 sm:hidden"
+              aria-label="Call 9789 6907"
+            >
+              <Phone className="h-5 w-5" />
+            </a>
+            <a
               href="https://wa.me/96597896907"
               className="hidden h-10 w-10 items-center justify-center rounded-full bg-zinc-100 text-zinc-700 transition-colors hover:bg-zinc-200 sm:flex"
               aria-label="WhatsApp"
