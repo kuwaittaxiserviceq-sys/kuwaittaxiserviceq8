@@ -140,7 +140,7 @@ export default async function AreaPage({ params }: Props) {
                 Book a Ride in {row.area}
               </Link>
               <a
-                href={`https://wa.me/96555205485?text=${encodeURIComponent(
+                href={`https://wa.me/96597896907?text=${encodeURIComponent(
                   `Hi, I need a taxi in ${row.area}, Kuwait`
                 )}`}
                 target="_blank"
@@ -175,13 +175,22 @@ export default async function AreaPage({ params }: Props) {
                 </div>
               ))}
             </div>
-            <Link
-              href="/rates"
-              className="group flex items-center gap-2 font-semibold text-brand-green hover:underline"
-            >
-              See fares for all 65+ areas in Kuwait
-              <MoveRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Link>
+            <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-6">
+              <Link
+                href="/airport-taxi"
+                className="group flex items-center gap-2 font-semibold text-brand-green hover:underline"
+              >
+                More on our Kuwait Airport Taxi service
+                <MoveRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+              <Link
+                href="/rates"
+                className="group flex items-center gap-2 font-semibold text-brand-green hover:underline"
+              >
+                See fares for all 65+ areas in Kuwait
+                <MoveRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </div>
           </Container>
         </section>
 
