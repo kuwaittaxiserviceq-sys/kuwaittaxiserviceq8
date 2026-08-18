@@ -3,30 +3,38 @@ import Container from "./Container";
 import SectionHeading from "./SectionHeading";
 import VehicleIllustration from "./VehicleIllustration";
 
-const fleet = [
+export type FleetItem = {
+  type: "sedan" | "suv" | "van" | "luxury";
+  name: string;
+  pax: number;
+  bags: number;
+  description: string;
+};
+
+const defaultFleet: FleetItem[] = [
   {
-    type: "sedan" as const,
+    type: "sedan",
     name: "Sedan",
     pax: 3,
     bags: 3,
     description: "Ideal for city rides & airport pickups.",
   },
   {
-    type: "suv" as const,
+    type: "suv",
     name: "SUV",
     pax: 6,
     bags: 6,
     description: "Great for families & groups with luggage.",
   },
   {
-    type: "van" as const,
+    type: "van",
     name: "Van",
     pax: 10,
     bags: 10,
     description: "Built for group transfers & events.",
   },
   {
-    type: "luxury" as const,
+    type: "luxury",
     name: "Luxury Sedan",
     pax: 3,
     bags: 2,
@@ -34,7 +42,7 @@ const fleet = [
   },
 ];
 
-export default function Fleet() {
+export default function Fleet({ items = defaultFleet }: { items?: FleetItem[] }) {
   return (
     <section id="fleet" className="bg-brand-black py-16 sm:py-20">
       <Container className="flex flex-col items-center gap-12">
@@ -44,8 +52,12 @@ export default function Fleet() {
           dark
         />
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {fleet.map(({ type, name, pax, bags, description }) => (
+        <div
+          className={`grid grid-cols-1 gap-6 sm:grid-cols-2 ${
+            items.length > 2 ? "lg:grid-cols-4" : "mx-auto w-full max-w-2xl"
+          }`}
+        >
+          {items.map(({ type, name, pax, bags, description }) => (
             <div
               key={name}
               className="flex flex-col overflow-hidden rounded-2xl bg-zinc-900 ring-1 ring-white/10"
