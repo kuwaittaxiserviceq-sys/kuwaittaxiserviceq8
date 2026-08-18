@@ -236,4 +236,127 @@ export const BLOG_TEMPLATES: BlogTemplate[] = [
 <h2>Billing made simple</h2>
 <p>Consolidated monthly invoicing, per-department trip logs, and WhatsApp booking for your admin team. Email us for a corporate rate card and a trial booking.</p>`,
   },
+  {
+    slug: "salmiya-hawalli-farwaniya-taxi-guide",
+    title: "Taxi Services in Salmiya, Hawalli & Farwaniya: A Local Guide",
+    excerpt:
+      "Kuwait's three busiest residential governorates, area by area — typical fares, what each neighborhood is known for, and how to book a fixed-price ride.",
+    category: "Area Guide",
+    seo_title: "Salmiya, Hawalli & Farwaniya Taxi Guide — Fares & Coverage",
+    seo_description:
+      "Taxi service in Salmiya, Hawalli and Farwaniya — fixed KWD fares, neighborhood coverage, and airport transfer times for Kuwait's busiest governorates.",
+    seo_keywords: [
+      "salmiya taxi",
+      "hawalli taxi",
+      "farwaniya taxi",
+      "taxi service kuwait",
+    ],
+    content: `<h2>Three governorates, one fixed-fare service</h2>
+<p>Between them, <a href="/areas/salmiya">Salmiya</a>, <a href="/areas/hawalli">Hawalli</a> and <a href="/areas/farwaniya">Farwaniya</a> cover most of Kuwait's day-to-day taxi demand — seafront apartments, shopping streets, hospitals, and the areas closest to Kuwait International Airport.</p>
+<h2>Salmiya</h2>
+<p>Kuwait's busiest seafront district — restaurants, the Gulf Road corniche, and dense residential towers. Sedan fares to the airport start from KWD 7.</p>
+<h2>Hawalli</h2>
+<p>A shopping and residential hub next to Salmiya and Jabriya, with some of the shortest airport pickup times in the capital. Fares also start from KWD 7.</p>
+<h2>Farwaniya</h2>
+<p>The most populous governorate and the closest to Kuwait International Airport — ideal for fast, low-fare pickups. Airport fares start from just KWD 6.</p>
+<h2>Book any of the three</h2>
+<p>Check the exact fare for your street on our <a href="/rates">rates page</a>, or message us on WhatsApp for an instant quote to or from any of these areas.</p>`,
+  },
+  {
+    slug: "24-7-kuwait-taxi-any-hour",
+    title: "24/7 Kuwait Taxi: How to Get a Ride at Any Hour",
+    excerpt:
+      "Late flight landing at 3 a.m.? Need a taxi on a public holiday? Here's how round-the-clock taxi dispatch actually works in Kuwait.",
+    category: "Travel Tips",
+    seo_title: "24/7 Kuwait Taxi — Book a Ride Any Hour, Any Day",
+    seo_description:
+      "Kuwait's 24/7 taxi service explained — late-night and early-morning availability, holiday pricing, and the fastest way to book instantly by WhatsApp or phone.",
+    seo_keywords: [
+      "24 hour taxi kuwait",
+      "late night taxi kuwait",
+      "kuwait taxi number",
+    ],
+    content: `<h2>Dispatch that never closes</h2>
+<p>Unlike many local taxis that slow down after midnight, a proper 24/7 service keeps the same fixed fares and driver availability at 3 a.m. as at 3 p.m. — including Fridays and public holidays.</p>
+<h2>When round-the-clock service matters most</h2>
+<ul>
+<li>Red-eye and early-morning flights at Kuwait International Airport</li>
+<li>Late-night pickups from events, weddings, or the airport arrivals hall</li>
+<li>Public holidays, when many informal taxis raise prices or stop answering</li>
+</ul>
+<h2>How to book instantly, any hour</h2>
+<p>WhatsApp is the fastest route — message your pickup point and time and get a fixed fare back within minutes, day or night. Prefer to talk? Call us directly from our <a href="/contact">contact page</a>. Airport pickups specifically are covered in detail on our <a href="/airport-taxi">airport taxi page</a>, including flight tracking for delayed night arrivals.</p>
+<h2>No night surcharge</h2>
+<p>Because our fares are fixed per route rather than metered, there's no late-night or holiday markup — the price you're quoted is the price you pay, any hour of the day.</p>`,
+  },
+  {
+    slug: "city-taxi-vs-airport-taxi-kuwait",
+    title: "City Taxi vs Airport Taxi in Kuwait: What's the Difference?",
+    excerpt:
+      "Booking a ride across town isn't the same as booking an airport transfer. Here's how pricing, booking, and service actually differ in Kuwait.",
+    category: "Travel Tips",
+    seo_title: "City Taxi vs Airport Taxi in Kuwait — Key Differences",
+    seo_description:
+      "How Kuwait city taxis differ from airport transfers — pricing structure, flight tracking, meet & greet, and which one you need for your trip.",
+    seo_keywords: [
+      "kuwait city taxi",
+      "airport taxi kuwait",
+      "taxi vs airport transfer",
+    ],
+    content: `<h2>Same driver network, different service</h2>
+<p>A city taxi and an <a href="/airport-taxi">airport taxi</a> in Kuwait both use the same fleet, but the way you book and what's included can be quite different.</p>
+<h2>Pricing differences</h2>
+<p>City rides are usually priced by area-to-area distance — check our full <a href="/rates">rates page</a> for exact figures. Airport transfers are priced per route to a fixed origin (Kuwait International Airport), which makes them easy to quote and book in advance regardless of your exact street.</p>
+<h2>Booking process differences</h2>
+<p>A city ride is typically booked minutes before you need it. An airport pickup is best pre-booked with your flight number so the driver can track landing time and adjust automatically for delays — something a same-day city booking doesn't need.</p>
+<h2>Which one do you need?</h2>
+<p>If you're moving between two points inside Kuwait — say, from <a href="/areas/kuwait-city">Kuwait City</a> to Salmiya — book a standard city ride. If you're landing at or departing from KWI, pre-book the airport service so your driver is waiting inside arrivals with a name sign.</p>`,
+  },
+  {
+    slug: "first-time-in-kuwait-transport-guide",
+    title: "First Time in Kuwait? A Transport Guide for Visitors",
+    excerpt:
+      "From landing at KWI to your first day out — a practical transport guide for visitors, covering airport pickup, popular areas, and day trips to Saudi Arabia.",
+    category: "Visitor Guide",
+    seo_title: "Getting Around Kuwait — A First-Time Visitor's Transport Guide",
+    seo_description:
+      "New to Kuwait? Here's how to get from the airport to your hotel, reach popular areas like Salmiya, and plan a day trip across the Saudi border.",
+    seo_keywords: [
+      "getting around kuwait",
+      "kuwait airport to hotel",
+      "visiting kuwait transport",
+    ],
+    content: `<h2>From the airport to your hotel</h2>
+<p>Kuwait International Airport is the arrival point for almost every visitor. Pre-booking an <a href="/airport-taxi">airport taxi</a> means your driver tracks your flight and meets you inside arrivals — no queuing for an unmarked car after a long flight.</p>
+<h2>Getting to popular areas</h2>
+<p>Most first-time visitors head to <a href="/areas/salmiya">Salmiya</a> for the seafront and shopping, or <a href="/areas/kuwait-city">Kuwait City</a> for the business district and waterfront towers. Fixed fares from the airport to either area are published on our <a href="/rates">rates page</a>, so you know the cost before you land.</p>
+<h2>Day trips to Saudi Arabia</h2>
+<p>If your visit includes a crossing into Saudi Arabia — for business, Umrah, or a short trip to the Eastern Province — the same door-to-door taxi model applies. See our <a href="/saudi-transfers">Kuwait to Saudi Arabia transfers</a> page for border-crossing details and fixed fares to Dammam, Riyadh, Makkah and Madinah.</p>
+<h2>A few practical tips</h2>
+<p>Agree your fare before the ride, keep a screenshot of the WhatsApp quote, and book night arrivals in advance — Kuwait's taxi service runs 24/7, but pre-booking guarantees a driver is waiting when you land.</p>`,
+  },
+  {
+    slug: "mangaf-to-ahmadi-taxi-fares",
+    title: "Mangaf to Ahmadi & Nearby Areas: Taxi Routes and Fares",
+    excerpt:
+      "Moving between Mangaf, Ahmadi, Fintas and Fahaheel? Here's what the short hop costs and how long it takes across Kuwait's Ahmadi Governorate.",
+    category: "Area Guide",
+    seo_title: "Mangaf to Ahmadi Taxi — Fares & Nearby Areas Guide",
+    seo_description:
+      "Taxi fares and travel times between Mangaf, Ahmadi, Fintas and Fahaheel in Kuwait's Ahmadi Governorate — fixed prices, no meters.",
+    seo_keywords: [
+      "mangaf to ahmadi taxi",
+      "transportation from mangaf to ahmadi",
+      "fintas taxi",
+      "fahaheel taxi",
+    ],
+    content: `<h2>Short hops within Ahmadi Governorate</h2>
+<p><a href="/areas/mangaf">Mangaf</a>, <a href="/areas/ahmadi">Ahmadi</a>, <a href="/areas/fintas">Fintas</a> and <a href="/areas/fahaheel">Fahaheel</a> sit close together along Kuwait's southeastern coast, and moving between them is one of the most common local trip requests we get.</p>
+<h2>Typical fares</h2>
+<p>Because these are short, well-known routes, fares are among the lowest on our network — generally KWD 4–5 for a sedan one-way. Exact pricing for each area, including SUV and van options, is on our <a href="/rates">rates page</a>.</p>
+<h2>Average travel time</h2>
+<p>Most Mangaf–Ahmadi or Fintas–Fahaheel trips take 10–15 minutes outside peak traffic, making this one of the quickest corridors we serve.</p>
+<h2>Book this route</h2>
+<p>These trips don't need advance booking — message us on WhatsApp with your pickup point and you'll get a fixed fare and a driver dispatched immediately, 24/7.</p>`,
+  },
 ];

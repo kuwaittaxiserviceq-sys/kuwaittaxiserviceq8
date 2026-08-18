@@ -50,6 +50,7 @@ const quickLinks = [
   { href: "/areas", label: "Areas We Serve" },
   { href: "/#services", label: "Our Services" },
   { href: "/rates", label: "Our Rates" },
+  { href: "/blog", label: "Blog" },
   { href: "/reservation", label: "Reservation" },
   { href: "/contact", label: "Contact Us" },
 ];

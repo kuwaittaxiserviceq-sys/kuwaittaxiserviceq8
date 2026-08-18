@@ -12,6 +12,7 @@ const links = [
   { href: "/#services", label: "Our Services" },
   { href: "/saudi-transfers", label: "Saudi Transfers" },
   { href: "/rates", label: "Our Rates" },
+  { href: "/blog", label: "Blog" },
   { href: "/contact", label: "Contact Us" },
 ];
 
