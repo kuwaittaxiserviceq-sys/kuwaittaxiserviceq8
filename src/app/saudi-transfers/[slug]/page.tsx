@@ -5,6 +5,7 @@ import { Car, Clock3, MapPin, MoveRight, Plane, Route, ShieldCheck } from "lucid
 import Navbar from "@/components/Navbar";
 import Container from "@/components/Container";
 import SectionHeading from "@/components/SectionHeading";
+import RouteTimeBanner from "@/components/RouteTimeBanner";
 import ReserveCta from "@/components/ReserveCta";
 import Fleet from "@/components/Fleet";
 import Footer from "@/components/Footer";
@@ -144,13 +145,15 @@ export default async function SaudiRoutePage({ params }: Props) {
           </div>
         </section>
 
+        <RouteTimeBanner duration={row.duration} distanceKm={row.distanceKm} fareFrom={row.sedan} />
+
         {/* Fares */}
         <section className="bg-white py-16 sm:py-20">
           <Container className="flex flex-col items-center gap-10">
             <SectionHeading
               eyebrow="Fixed Fares"
               title={`Kuwait ⇄ ${row.city} Fares`}
-              description={`One-way, per vehicle (not per passenger) — the same fare applies in both directions. ${row.distanceKm} km from Kuwait City, roughly ${row.duration}.`}
+              description="One-way, per vehicle (not per passenger) — the same fare applies in both directions."
             />
             <div className="grid w-full grid-cols-1 gap-5 sm:grid-cols-3">
               {priceCards(row).map(({ label, price }) => (
