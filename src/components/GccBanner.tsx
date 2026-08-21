@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Globe2, MoveRight } from "lucide-react";
 import Container from "./Container";
 
@@ -21,15 +22,13 @@ export default function GccBanner() {
             </p>
           </div>
         </div>
-        <a
-          href="https://wa.me/96597896907?text=Hi%2C%20I%20want%20a%20quote%20for%20Kuwait%20to%20UAE%2FBahrain"
-          target="_blank"
-          rel="noopener noreferrer"
+        <Link
+          href="/gcc-transfers"
           className="group flex h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-brand-green px-7 text-base font-semibold text-white transition-colors hover:bg-emerald-600"
         >
-          Get a UAE / Bahrain Quote
+          UAE &amp; Bahrain Routes &amp; Fares
           <MoveRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-        </a>
+        </Link>
       </Container>
     </section>
   );

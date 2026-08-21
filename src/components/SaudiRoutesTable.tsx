@@ -1,7 +1,9 @@
+import Link from "next/link";
 import { Plane } from "lucide-react";
 import { saudiRoutes } from "./saudiRoutes";
 import Container from "./Container";
 import SectionHeading from "./SectionHeading";
+import { slugifyArea } from "@/lib/areas";
 
 export default function SaudiRoutesTable() {
   return (
@@ -29,7 +31,12 @@ export default function SaudiRoutesTable() {
               {saudiRoutes.map((route) => (
                 <tr key={route.city} className="even:bg-zinc-50/60">
                   <td className="px-4 py-3">
-                    <div className="font-medium text-zinc-900">{route.city}</div>
+                    <Link
+                      href={`/saudi-transfers/${slugifyArea(route.city)}`}
+                      className="font-medium text-zinc-900 hover:text-brand-green hover:underline"
+                    >
+                      {route.city}
+                    </Link>
                     <div className="text-xs text-zinc-500">{route.region}</div>
                     {route.airport && (
                       <div className="mt-1 flex items-center gap-1 text-xs text-brand-green">

@@ -65,6 +65,7 @@ const services = [
 const serviceLinks = [
   { href: "/airport-taxi", label: "Kuwait Airport Taxi" },
   { href: "/saudi-transfers", label: "Kuwait ⇄ Saudi Transfers" },
+  { href: "/gcc-transfers", label: "Kuwait ⇄ Bahrain & UAE" },
 ];
 
 export default function Footer() {

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, Clock3, MoveRight } from "lucide-react";
 import Container from "./Container";
 import { saudiRoutes } from "./saudiRoutes";
+import { slugifyArea } from "@/lib/areas";
 
 const popularCities = ["Dammam", "Khobar", "Riyadh", "Makkah", "Madinah", "Jeddah"];
 
@@ -41,32 +42,37 @@ export default function PopularRoutes() {
               key={route.city}
               className="flex flex-col gap-5 rounded-2xl bg-white p-5 ring-1 ring-black/5 transition-all hover:-translate-y-0.5 hover:shadow-lg"
             >
-              <div className="flex items-center gap-1.5 text-xs font-medium text-zinc-500">
-                <Clock3 className="h-3.5 w-3.5" />
-                {route.duration}
-              </div>
+              <Link
+                href={`/saudi-transfers/${slugifyArea(route.city)}`}
+                className="flex flex-col gap-5"
+              >
+                <div className="flex items-center gap-1.5 text-xs font-medium text-zinc-500">
+                  <Clock3 className="h-3.5 w-3.5" />
+                  {route.duration}
+                </div>
 
-              <div className="flex items-center justify-between gap-2">
-                <span className="flex items-center gap-1.5 text-sm font-semibold text-zinc-900">
-                  <span className="rounded bg-brand-green-light px-1.5 py-0.5 text-[10px] font-bold tracking-wide text-brand-green">
-                    KW
+                <div className="flex items-center justify-between gap-2">
+                  <span className="flex items-center gap-1.5 text-sm font-semibold text-zinc-900">
+                    <span className="rounded bg-brand-green-light px-1.5 py-0.5 text-[10px] font-bold tracking-wide text-brand-green">
+                      KW
+                    </span>
+                    Kuwait
                   </span>
-                  Kuwait
-                </span>
-                <span className="flex flex-1 items-center gap-1.5 px-1">
-                  <span className="h-px flex-1 border-t-2 border-dashed border-zinc-200" />
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-green-light text-brand-green">
-                    <MoveRight className="h-3.5 w-3.5" />
+                  <span className="flex flex-1 items-center gap-1.5 px-1">
+                    <span className="h-px flex-1 border-t-2 border-dashed border-zinc-200" />
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-green-light text-brand-green">
+                      <MoveRight className="h-3.5 w-3.5" />
+                    </span>
+                    <span className="h-px flex-1 border-t-2 border-dashed border-zinc-200" />
                   </span>
-                  <span className="h-px flex-1 border-t-2 border-dashed border-zinc-200" />
-                </span>
-                <span className="flex items-center gap-1.5 text-sm font-semibold text-zinc-900">
-                  {route.city}
-                  <span className="rounded bg-zinc-100 px-1.5 py-0.5 text-[10px] font-bold tracking-wide text-zinc-500">
-                    SA
+                  <span className="flex items-center gap-1.5 text-sm font-semibold text-zinc-900">
+                    {route.city}
+                    <span className="rounded bg-zinc-100 px-1.5 py-0.5 text-[10px] font-bold tracking-wide text-zinc-500">
+                      SA
+                    </span>
                   </span>
-                </span>
-              </div>
+                </div>
+              </Link>
 
               <div className="flex items-center justify-between border-t border-zinc-100 pt-4">
                 <div className="text-sm">
