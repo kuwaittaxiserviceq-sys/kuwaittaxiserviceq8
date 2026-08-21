@@ -359,4 +359,86 @@ export const BLOG_TEMPLATES: BlogTemplate[] = [
 <h2>Book this route</h2>
 <p>These trips don't need advance booking — message us on WhatsApp with your pickup point and you'll get a fixed fare and a driver dispatched immediately, 24/7.</p>`,
   },
+  {
+    slug: "kuwait-airport-to-saudi-border-taxi",
+    title: "Kuwait Airport to the Saudi Border: Landing and Crossing in One Trip",
+    excerpt:
+      "Flying into Kuwait and continuing straight to Saudi Arabia? Here's how an airport-to-border taxi trip works, and why it beats a separate transfer into the city first.",
+    category: "Border Crossing",
+    seo_title: "Kuwait Airport to Saudi Border Taxi — KWI to Nuwaiseeb",
+    seo_description:
+      "Book a single taxi from Kuwait International Airport straight to the Nuwaiseeb border and on to Saudi Arabia — no separate transfer into Kuwait City required.",
+    seo_keywords: [
+      "kuwait airport to saudi border",
+      "kwi to nuwaiseeb",
+      "airport to saudi border taxi",
+      "kuwait airport to dammam",
+    ],
+    content: `<h2>Skip the transfer into the city</h2>
+<p>If your final destination is in Saudi Arabia — not Kuwait — there's no need to book an <a href="/airport-taxi">airport taxi</a> into Kuwait City and a separate cross-border trip afterward. A single vehicle can take you from arrivals at Kuwait International Airport straight to the Nuwaiseeb border and on to your destination, whether that's <a href="/saudi-transfers/dammam">Dammam</a>, <a href="/saudi-transfers/khobar">Khobar</a>, or further afield.</p>
+<h2>How the combined trip works</h2>
+<p>Your driver tracks your flight the same way as any airport pickup, meets you inside arrivals, and then drives directly toward the border instead of stopping in Kuwait City first. The <a href="/border-crossing">border crossing process</a> itself doesn't change — you're still in the same vehicle the whole way, with your driver managing the paperwork.</p>
+<h2>Who this suits</h2>
+<ul>
+<li>Business travellers connecting through Kuwait to a meeting in Saudi Arabia</li>
+<li>Umrah and Ziyarah travellers heading onward to Makkah or Madinah</li>
+<li>Families visiting relatives in the Eastern Province who don't need a Kuwait stopover</li>
+</ul>
+<h2>What to have ready</h2>
+<p>Bring your passport and valid Saudi visa (or civil ID if you're a GCC national) in hand luggage rather than checked baggage, since you'll need them again shortly after landing. Requirements vary by nationality and can change, so confirm the latest rules before you fly.</p>
+<h2>Book ahead</h2>
+<p>Combined airport-to-border trips are easiest to plan when booked in advance with your flight number — message us on WhatsApp and we'll confirm a fixed fare for the whole journey, airport to destination.</p>`,
+  },
+  {
+    slug: "private-vs-shared-taxi-kuwait-saudi",
+    title: "Private Taxi vs Shared Transportation: Kuwait to Saudi Arabia",
+    excerpt:
+      "Shared taxis and buses can look cheaper on paper. Here's what actually differs between private and shared cross-border transport from Kuwait — cost, comfort, and control over your schedule.",
+    category: "Border Crossing",
+    seo_title: "Private Taxi vs Shared Transportation — Kuwait to Saudi Arabia",
+    seo_description:
+      "Comparing private taxi and shared transportation for the Kuwait to Saudi Arabia border crossing — schedule, comfort, luggage space, and what suits families vs solo travellers.",
+    seo_keywords: [
+      "private taxi kuwait to saudi",
+      "shared taxi kuwait saudi",
+      "kuwait to saudi arabia private taxi",
+      "kuwait to saudi transportation",
+    ],
+    content: `<h2>Two different ways to cross</h2>
+<p>Travellers heading from Kuwait into Saudi Arabia usually choose between a <a href="/saudi-transfers">private taxi</a> booked door to door, or shared transportation — a shared taxi or intercity bus that runs on a fixed schedule with other passengers aboard.</p>
+<h2>Schedule and flexibility</h2>
+<p>A private taxi leaves when you're ready, not when a shared vehicle is full or a bus timetable says so. That matters most for flight connections, early Umrah departures, or business trips where arrival time is fixed at the other end.</p>
+<h2>Cost per seat vs cost per trip</h2>
+<p>Shared transportation is priced per seat and can be cheaper for a single traveller. A private taxi is priced per vehicle — once you're a family, a small group, or travelling with meaningful luggage, splitting a fixed vehicle fare between passengers often works out close to, or better than, shared fares, while keeping the whole party together.</p>
+<h2>Comfort and border handling</h2>
+<p>In a private car you keep your own space and your luggage stays with you the entire way, including through the <a href="/border-crossing">Nuwaiseeb border crossing</a>. Shared vehicles sometimes require passengers to disembark with their bags at the border for separate processing, or to change vehicles on the Saudi side.</p>
+<h2>Which one makes sense for you</h2>
+<p>Solo travellers on a tight budget with no time pressure may prefer shared transport. Families, groups, business travellers, and anyone connecting to a flight or a fixed appointment are usually better served by a <a href="/gcc-transfers">private cross-border taxi</a>, where the fare, route, and departure time are all agreed before you set off.</p>`,
+  },
+  {
+    slug: "kuwait-to-bahrain-via-saudi-arabia",
+    title: "Kuwait to Bahrain via Saudi Arabia: The King Fahd Causeway Route",
+    excerpt:
+      "There's no direct land border between Kuwait and Bahrain — every road trip transits Saudi Arabia and crosses the King Fahd Causeway. Here's how the route works.",
+    category: "Border Crossing",
+    seo_title: "Kuwait to Bahrain via Saudi Arabia — King Fahd Causeway Guide",
+    seo_description:
+      "Kuwait to Bahrain by road transits Saudi Arabia's Eastern Province and crosses the King Fahd Causeway into Manama. Route, considerations, and fixed-fare taxi options.",
+    seo_keywords: [
+      "kuwait to bahrain via saudi arabia",
+      "king fahd causeway from kuwait",
+      "kuwait to manama taxi",
+      "kuwait to bahrain taxi",
+    ],
+    content: `<h2>Why the route goes through Saudi Arabia</h2>
+<p>Kuwait and Bahrain don't share a land border — Bahrain is an island connected to mainland Saudi Arabia by the King Fahd Causeway. A road trip from Kuwait to <a href="/gcc-transfers/manama">Manama</a> means crossing into Saudi Arabia at <a href="/border-crossing">Nuwaiseeb</a> first, driving south through the Eastern Province, then crossing the causeway into Bahrain.</p>
+<h2>What the causeway crossing involves</h2>
+<p>The King Fahd Causeway is a toll bridge with its own passport and vehicle checkpoint on both the Saudi and Bahraini sides, separate from the Nuwaiseeb crossing you pass through earlier in the trip. In practice this means two border processes in one journey rather than one.</p>
+<h2>Visa considerations for a multi-country trip</h2>
+<p>Because this route transits Saudi Arabia to reach Bahrain, many nationalities need valid entry permissions for both countries, not just Bahrain as the final stop. Rules differ by nationality and are set by each country's authorities — confirm current requirements before booking rather than assuming your Bahrain visa alone is sufficient for the transit.</p>
+<h2>Why book it as one private trip</h2>
+<p>Handling two border crossings independently — arranging transport for the Kuwait–Saudi leg, then separately for the causeway — adds complexity and waiting time. A single <a href="/gcc-transfers">private taxi from Kuwait to Bahrain</a> keeps you in one vehicle with one driver managing both crossings, so you don't have to coordinate connecting transport yourself.</p>
+<h2>Plan your trip</h2>
+<p>Journeys to Bahrain take longer than the shorter Eastern Province routes to Dammam or Khobar, so build in extra time for the causeway crossing. Message us on WhatsApp with your travel dates for a fixed fare covering the entire Kuwait-to-Manama journey.</p>`,
+  },
 ];

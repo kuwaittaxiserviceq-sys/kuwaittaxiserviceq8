@@ -66,6 +66,7 @@ const serviceLinks = [
   { href: "/airport-taxi", label: "Kuwait Airport Taxi" },
   { href: "/saudi-transfers", label: "Kuwait ⇄ Saudi Transfers" },
   { href: "/gcc-transfers", label: "Kuwait ⇄ Bahrain & UAE" },
+  { href: "/border-crossing", label: "Border Crossing Guide" },
 ];
 
 export default function Footer() {

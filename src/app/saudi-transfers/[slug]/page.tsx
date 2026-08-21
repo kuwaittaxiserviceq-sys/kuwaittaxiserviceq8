@@ -198,6 +198,13 @@ export default async function SaudiRoutePage({ params }: Props) {
                 </div>
               ))}
             </div>
+            <Link
+              href="/border-crossing"
+              className="group flex items-center gap-2 font-semibold text-brand-green hover:underline"
+            >
+              What to expect at the Kuwait border crossing
+              <MoveRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Link>
           </Container>
         </section>
 

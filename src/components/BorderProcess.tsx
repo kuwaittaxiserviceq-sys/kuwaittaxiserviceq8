@@ -1,4 +1,5 @@
-import { CheckCircle2, CreditCard, FileCheck, Landmark, MoonStar, Route } from "lucide-react";
+import Link from "next/link";
+import { CheckCircle2, CreditCard, FileCheck, Landmark, MoonStar, MoveRight, Route } from "lucide-react";
 import Container from "./Container";
 import SectionHeading from "./SectionHeading";
 
@@ -81,6 +82,14 @@ export default function BorderProcess() {
             travel. We&apos;ll remind you of the checklist when you book.
           </p>
         </div>
+
+        <Link
+          href="/border-crossing"
+          className="group flex items-center gap-2 font-semibold text-brand-green hover:underline"
+        >
+          Read our full border crossing taxi guide
+          <MoveRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+        </Link>
       </Container>
     </section>
   );

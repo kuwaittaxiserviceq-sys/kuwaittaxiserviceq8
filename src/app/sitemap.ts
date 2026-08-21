@@ -50,6 +50,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/airport-taxi`, changeFrequency: "weekly", priority: 0.9 },
     { url: `${baseUrl}/saudi-transfers`, changeFrequency: "weekly", priority: 0.9 },
     { url: `${baseUrl}/gcc-transfers`, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${baseUrl}/border-crossing`, changeFrequency: "weekly", priority: 0.8 },
     { url: `${baseUrl}/rates`, changeFrequency: "weekly", priority: 0.9 },
     { url: `${baseUrl}/blog`, changeFrequency: "weekly", priority: 0.7 },
     { url: `${baseUrl}/reservation`, changeFrequency: "monthly", priority: 0.9 },
